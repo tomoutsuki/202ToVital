@@ -52,7 +52,7 @@ and the Vital preset comments.
 ```
 
 The profile exposes envelope timing/exponent, cutoff bounds, fine tuning,
-pitch/filter modulation depths, LFO rate bounds, portamento, EQ gain, output
+pitch/filter modulation depths, LFO rate bounds and exponent, portamento, EQ gain, output
 headroom (`output_gain_db`, default -18 dB), and
 waveform/filter/LFO enum order and Super Saw Vital detune range/power. Defaults
 are explicit hypotheses except where controlled experiments are cited in the

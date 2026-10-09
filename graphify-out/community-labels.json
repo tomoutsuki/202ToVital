@@ -1,13 +1,18 @@
 {
   "0": "Format and Fidelity Evidence",
-  "1": "CLI and Vital Assets",
-  "2": "Graph Build Dependencies",
-  "3": "Source Parsing and Conversion Data",
-  "4": "Fitted Super Saw Mapping",
+  "1": "Converter Source and Docs",
+  "2": "CLI and Vital Assets",
+  "3": "Graph Build Dependencies",
+  "4": "LFO Calibration and Tests",
   "5": "CLI and Parser Tests",
   "6": "Synthesis Parameter Mapping",
   "7": "Controlled Waveform Analysis",
-  "8": "Converter and Mapping Tests",
-  "9": "Waveform Fidelity Findings",
-  "10": "Package Metadata"
+  "8": "Fitted Super Saw Mapping",
+  "9": "Free-running LFO Calibration",
+  "10": "Waveform Fidelity Findings",
+  "11": "LFO Reset Policy",
+  "12": "Controlled Waveform Comparison",
+  "13": "Tempo-Sync Approximation",
+  "14": "Signed Modulation",
+  "15": "Package Metadata"
 }

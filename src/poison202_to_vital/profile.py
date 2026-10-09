@@ -16,7 +16,8 @@ class Profile:
     pitch_envelope_semitones: float = 24.0
     filter_envelope_semitones: float = 64.0
     lfo_min_hz: float = 0.05
-    lfo_max_hz: float = 25.0
+    lfo_max_hz: float = 40.0
+    lfo_rate_exponent: float = 2.0
     lfo_pitch_semitones: float = 24.0
     eq_gain_db: float = 12.0
     portamento_max_seconds: float = 2.0

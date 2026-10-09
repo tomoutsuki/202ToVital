@@ -1,26 +1,26 @@
 {
-  "node_count": 175,
+  "node_count": 194,
   "unverified_node_count": 0,
-  "raw_edge_count": 387,
+  "raw_edge_count": 409,
   "non_object_edges": 0,
   "missing_endpoint_edges": 0,
   "dangling_endpoint_edges": 69,
   "external_reference_edges": 0,
   "self_loop_edges": 1,
-  "valid_candidate_edges": 318,
+  "valid_candidate_edges": 340,
   "exact_duplicate_edges": 0,
-  "directed_unique_endpoint_pairs": 310,
-  "directed_same_endpoint_collapsed_edges": 8,
-  "undirected_unique_endpoint_pairs": 310,
-  "undirected_same_endpoint_collapsed_edges": 8,
-  "same_endpoint_group_count": 7,
-  "relation_variant_groups": 7,
+  "directed_unique_endpoint_pairs": 331,
+  "directed_same_endpoint_collapsed_edges": 9,
+  "undirected_unique_endpoint_pairs": 331,
+  "undirected_same_endpoint_collapsed_edges": 9,
+  "same_endpoint_group_count": 8,
+  "relation_variant_groups": 8,
   "source_file_variant_groups": 0,
   "source_location_variant_groups": 0,
   "context_variant_groups": 0,
   "post_build_graph_type": "Graph",
-  "post_build_node_count": 210,
-  "post_build_edge_count": 379,
+  "post_build_node_count": 229,
+  "post_build_edge_count": 400,
   "post_build_error": "",
   "producer_suppression": {
     "path": "/home/tomas/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/extract.py",
@@ -115,12 +115,31 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L407",
-        "L410"
+        "L424",
+        "L427"
       ],
       "contexts": [
         "",
         "call",
+        "parameter_type"
+      ]
+    },
+    {
+      "source": "src_poison202_to_vital_convert_lfo_free_rate_hz",
+      "target": "src_poison202_to_vital_profile_profile",
+      "edge_count": 2,
+      "relations": [
+        "references",
+        "uses"
+      ],
+      "source_files": [
+        "src/poison202_to_vital/convert.py"
+      ],
+      "source_locations": [
+        "L49"
+      ],
+      "contexts": [
+        "",
         "parameter_type"
       ]
     },
@@ -136,8 +155,8 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L390",
-        "L404"
+        "L407",
+        "L421"
       ],
       "contexts": [
         "call",
@@ -156,7 +175,7 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L407"
+        "L424"
       ],
       "contexts": [
         "",
@@ -181,26 +200,6 @@
       "contexts": [
         "call",
         "return_type"
-      ]
-    },
-    {
-      "source": "tools_extract_vital_schema_number",
-      "target": "tools_extract_vital_schema_number_calc",
-      "edge_count": 2,
-      "relations": [
-        "calls",
-        "contains"
-      ],
-      "source_files": [
-        "tools/extract_vital_schema.py"
-      ],
-      "source_locations": [
-        "L35",
-        "L44"
-      ],
-      "contexts": [
-        "",
-        "call"
       ]
     }
   ]

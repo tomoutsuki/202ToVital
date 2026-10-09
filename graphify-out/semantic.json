@@ -329,18 +329,6 @@
       "contributor": null
     },
     {
-      "id": "docs_mapping_tempo_lfo",
-      "label": "Tempo division and LFO approximation",
-      "file_type": "rationale",
-      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
-      "source_location": "docs/mapping.md:Filters and timing",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "Uncertain 22-entry Poison tempo list maps to nearest Vital division; branch routing, phase and retrigger need measurement."
-    },
-    {
       "id": "docs_mapping_xmod_ring",
       "label": "XMOD FM and ring RM approximation",
       "file_type": "rationale",
@@ -611,6 +599,200 @@
       "captured_at": null,
       "author": null,
       "contributor": null
+    },
+    {
+      "id": "docs_mapping_mapping_decisions",
+      "label": "Mapping Decisions and Known Fidelity Limits",
+      "file_type": "document",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "# Mapping decisions and known fidelity limits",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_default_calibration_profile",
+      "label": "Default Calibration Profile",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_free_running_lfo_rate",
+      "label": "Free-running LFO Rate Mapping",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Uses the temporary measured approximation max(lfo_min_hz, 40*x**2); it is not asserted as identified Poison DSP."
+    },
+    {
+      "id": "docs_mapping_lfo_rate_measured_points",
+      "label": "Measured LFO Rate Points",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The Poison experiment measured approximately 2.6, 10.3, 22.6, and 40 Hz at RATE 25, 50, 75, and 100."
+    },
+    {
+      "id": "docs_mapping_lfo_min_hz",
+      "label": "LFO Minimum Frequency",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A Vital-safe floor at unmeasured RATE zero."
+    },
+    {
+      "id": "docs_mapping_lfo_max_hz",
+      "label": "LFO Maximum Frequency Profile Control",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_lfo_rate_exponent",
+      "label": "LFO Rate Exponent Profile Control",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_tempo_sync_mapping",
+      "label": "Tempo-sync Mapping",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Uses the draft's uncertain 22-entry division list, assumes a normalized selector index, and reports nearest-division approximations."
+    },
+    {
+      "id": "docs_mapping_tempo_division_list",
+      "label": "Uncertain 22-entry Tempo Division List",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_vital_tempo_divisions",
+      "label": "Vital Straight Dotted Triplet Divisions",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_signed_bipolar_modulation",
+      "label": "Signed Bipolar Modulation Policy",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Positive and negative source depth remains signed in a bipolar Vital connection."
+    },
+    {
+      "id": "docs_mapping_lfo_reset_policy",
+      "label": "LFO Reset Policy",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A deliberate export policy independent of Poison RETRIG."
+    },
+    {
+      "id": "docs_mapping_normal_lfo_reset",
+      "label": "Normal LFO Phase-zero Reset",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_random_lfo_reset",
+      "label": "Random LFO Per-note Reset",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_poison_retrig",
+      "label": "Poison RETRIG",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_poison_reset_phase_offset",
+      "label": "Poison Reset-phase Offset",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The matching Poison reset-phase offset remains unmeasured."
+    },
+    {
+      "id": "docs_mapping_random_sample_and_hold",
+      "label": "Vital Sample-and-hold Generator",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
     }
   ],
   "edges": [
@@ -868,16 +1050,6 @@
       "source": "docs_mapping_calibration_curves",
       "target": "docs_mapping_envelope_allocation",
       "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
-      "source_location": "docs/mapping.md:Filters and timing",
-      "weight": 1.0
-    },
-    {
-      "source": "docs_mapping_tempo_lfo",
-      "target": "readme_conversion_report",
-      "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
@@ -1272,6 +1444,136 @@
       "confidence_score": 1.0,
       "source_file": "/home/tomas/202ToVital/202ToVital/docs/controlled-waveform-review.md",
       "source_location": "Super Saw analysis update",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_mapping_decisions",
+      "target": "docs_mapping_default_calibration_profile",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_default_calibration_profile",
+      "target": "docs_mapping_free_running_lfo_rate",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_free_running_lfo_rate",
+      "target": "docs_mapping_lfo_rate_measured_points",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_free_running_lfo_rate",
+      "target": "docs_mapping_lfo_min_hz",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_free_running_lfo_rate",
+      "target": "docs_mapping_lfo_max_hz",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_free_running_lfo_rate",
+      "target": "docs_mapping_lfo_rate_exponent",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_tempo_sync_mapping",
+      "target": "docs_mapping_tempo_division_list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_tempo_sync_mapping",
+      "target": "docs_mapping_vital_tempo_divisions",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_lfo_reset_policy",
+      "target": "docs_mapping_normal_lfo_reset",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_lfo_reset_policy",
+      "target": "docs_mapping_random_lfo_reset",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_lfo_reset_policy",
+      "target": "docs_mapping_poison_retrig",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_lfo_reset_policy",
+      "target": "docs_mapping_poison_reset_phase_offset",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_random_lfo_reset",
+      "target": "docs_mapping_random_sample_and_hold",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "## Filters and timing",
       "weight": 1.0
     }
   ],

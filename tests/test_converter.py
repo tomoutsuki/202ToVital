@@ -10,7 +10,7 @@ import zipfile
 
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
-from poison202_to_vital.convert import convert, supersaw_blend, supersaw_outer_cents
+from poison202_to_vital.convert import convert, lfo_free_rate_hz, supersaw_blend, supersaw_outer_cents
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -100,6 +100,23 @@ class MappingTests(unittest.TestCase):
         self.assertAlmostEqual(settings[f'modulation_{idx}_amount'] * 96 * .5, 24)
         self.assertEqual(settings[f'modulation_{idx}_bipolar'], 1)
 
+    def test_measured_free_lfo_rate_curve_and_retrigger_policy(self):
+        profile = Profile()
+        self.assertAlmostEqual(lfo_free_rate_hz(.25, profile), 2.5)
+        self.assertAlmostEqual(lfo_free_rate_hz(.5, profile), 10)
+        self.assertAlmostEqual(lfo_free_rate_hz(.75, profile), 22.5)
+        self.assertAlmostEqual(lfo_free_rate_hz(1, profile), 40)
+        self.assertEqual(lfo_free_rate_hz(0, profile), .05)
+
+        settings = convert(source(RETR=0, L1FQ=.5, **{'L1>P': -1})).preset['settings']
+        self.assertAlmostEqual(settings['lfo_1_frequency'], math.log2(10))
+        self.assertEqual(settings['lfo_1_sync'], 0)
+        self.assertEqual(settings['lfo_1_sync_type'], 0)
+        self.assertEqual(settings['lfo_1_phase'], 0)
+        idx = next(i for i, mod in enumerate(settings['modulations'], 1)
+                   if mod == {'source': 'lfo_1', 'destination': 'osc_1_transpose'})
+        self.assertAlmostEqual(settings[f'modulation_{idx}_amount'] * 96 * .5, -24)
+
     def test_supersaw_uses_fitted_mix_and_detune_curves(self):
         zero = convert(source(O1TY=4, O1PW=0, O1PM=0)).preset['settings']
         middle = convert(source(O1TY=4, O1PW=.5, O1PM=.5)).preset['settings']
@@ -119,6 +136,8 @@ class MappingTests(unittest.TestCase):
         settings = convert(source(FXON=0, FX1S=1, FX1L=1, L1TY=5, **{'L1>F': .2})).preset['settings']
         self.assertNotIn('distortion_on', settings)
         self.assertEqual(settings['random_1_style'], 1)
+        self.assertEqual(settings['random_1_sync_type'], 0)
+        self.assertEqual(settings['random_1_sync'], 0)
         self.assertTrue(any(m['source'] == 'random_1' for m in settings['modulations']))
 
     def test_unknown_and_unsupported_are_reported(self):
@@ -131,7 +150,8 @@ class MappingTests(unittest.TestCase):
     def test_profile_validation(self):
         for values in [{'envelope_exponent': math.nan}, {'cutoff_max_hz': 10}, {'envelope_max_seconds': 40},
                        {'fine_tune_cents': 'wrong'}, {'supersaw_detune_range_cents': 49},
-                       {'supersaw_detune_power': 0}, {'waveform_order': ['sine']}]:
+                       {'supersaw_detune_power': 0}, {'lfo_rate_exponent': 0},
+                       {'waveform_order': ['sine']}]:
             with self.assertRaises(ValueError):
                 Profile(**values)
         for bpm in (0, 301, math.inf, math.nan):

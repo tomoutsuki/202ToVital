@@ -46,6 +46,17 @@ def supersaw_outer_cents(value: float) -> float:
     return 1200.0 * math.log2(1.0 + 0.10745242 * supersaw_detune_curve(value))
 
 
+def lfo_free_rate_hz(value: float, profile: Profile) -> float:
+    """Approximate Poison's measured free-running LFO RATE response.
+
+    The controlled RATE sweep is near quadratic (2.6, 10.3, 22.6 and 40 Hz
+    at 25, 50, 75 and 100). RATE zero was not measurable, so the profile's
+    existing positive minimum is a Vital-safe floor rather than a Poison claim.
+    """
+    value = max(0.0, min(1.0, value))
+    return max(profile.lfo_min_hz, profile.lfo_max_hz * value ** profile.lfo_rate_exponent)
+
+
 @dataclass
 class Conversion:
     preset: dict
@@ -235,15 +246,19 @@ class Converter:
             self.warn('unsupported', 'Poison oscillator-to-oscillator hard sync is not reproduced by Vital self-sync; SYNC is omitted.')
 
     def lfos(self):
-        retrigger = self.read('RETR', discrete=True)
+        # RETR is recorded for auditability but the export policy intentionally
+        # resets every Vital LFO per note, including Poison RETRIG OFF patches.
+        self.read('RETR', discrete=True)
         for i in (1, 2):
             tag, prefix = f'L{i}', f'lfo_{i}'
             shape = self.profile.lfo_order[int(self.read(tag + 'TY', hi=5, discrete=True))]
             rate = self.read(tag + 'FQ', .5)
-            frequency = math.log2(self.profile.lfo_min_hz) + rate * math.log2(self.profile.lfo_max_hz / self.profile.lfo_min_hz)
+            frequency = math.log2(lfo_free_rate_hz(rate, self.profile))
             source = f'random_{i}' if shape == 'random' else prefix
             self.set(source + '_frequency', frequency)
-            self.set(source + '_sync_type', int(not retrigger))
+            # Vital sync_type 0 is per-note trigger/reset for both SynthLfo
+            # and RandomLfo. sync below independently selects free vs tempo rate.
+            self.set(source + '_sync_type', 0)
             self.set(source + '_sync', 0)
             if self.read(f'TSL{i}', discrete=True):
                 self.tempo(source, rate)
@@ -254,6 +269,7 @@ class Converter:
                     self.warn('unsupported', f'{tag}FD: random-source fade is not reproduced.')
             else:
                 self.set(prefix + '_fade_time', fade)
+                self.set(prefix + '_phase', 0)
                 points = {'triangle': [(0, 0), (.5, 1), (1, 0)],
                           'saw': [(0, 1), (1, 0)],
                           'square': [(0, 1), (.5, 1), (.5, 0), (1, 0)],
@@ -277,7 +293,8 @@ class Converter:
                 self.warn('modwheel_lfo', 'Mod wheel adds to existing LFO depth; Poison wheel behavior is unmeasured.')
         if self.read('LXFM'):
             self.warn('unsupported', 'LFO cross-frequency modulation direction and law are unknown; LXFM is omitted.')
-        self.warn('lfo_routing', 'LFO1 is assigned to branch 1 and LFO2 to branch 2; routing and polarity need measurement. Amp modulation is additive at oscillator level.')
+        self.warn('lfo_retrigger_policy', 'Vital normal LFOs reset per note at phase zero and random LFOs reset per note. Poison RETR is recorded but does not change this export policy.')
+        self.warn('lfo_routing', 'LFO1 is assigned to branch 1 and LFO2 to branch 2. Signed Poison depth is retained as a bipolar Vital modulation amount; exact branch routing and reset-phase offset still need measurement. Amp modulation is additive at oscillator level.')
 
     def performance(self):
         p = self.profile

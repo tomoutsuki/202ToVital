@@ -52,18 +52,25 @@ use blend/style settings; Peak/Notch responses approximate Poison. TVF PAIRED
 is reported unsupported, since copying filter settings or adding poles would
 invent behavior. SOFT RESO is reported unsupported for the same reason.
 
-The default calibration profile proposes envelope seconds = 10*x**3; cutoff
-20*1000**x Hz; LFO 0.05*500**x Hz. These are chosen practical starting curves,
-**not fitted measurements**. Fine tuning, filter/pitch modulation limits and EQ
-range are similarly configurable. Vital modulation amount is divided by the
-destination's parameter span; bipolar amounts are doubled because Vital shifts
-the source by -0.5. See `modulation_connection_processor.cpp:94`.
+The default calibration profile proposes envelope seconds = 10*x**3 and cutoff
+20*1000**x Hz. Free-running LFO RATE uses the temporary measured approximation
+`max(lfo_min_hz, 40*x**2)`: the Poison experiment measured about 2.6, 10.3,
+22.6 and 40 Hz at RATE 25, 50, 75 and 100. `lfo_min_hz` is a Vital-safe floor
+at unmeasured RATE zero; `lfo_max_hz` and `lfo_rate_exponent` retain the curve
+as profile settings rather than asserting it as identified Poison DSP. Fine
+tuning, filter/pitch modulation limits and EQ range are similarly configurable.
+Vital modulation amount is divided by the destination's parameter span; bipolar
+amounts are doubled because Vital shifts the source by -0.5. See
+`modulation_connection_processor.cpp:94`.
 
 Tempo uses the draft's uncertain 22-entry division list and assumes a normalized
 selector index. It chooses the nearest Vital straight/dotted/triplet division,
 reporting approximations. LFO1 is provisionally routed to branch1 and LFO2 to
-branch2. Random uses Vital's sample-and-hold generator. Random fade and LFO XFM
-are not implemented. Wave phase, routing and retrigger semantics need measurement.
+branch2. Positive and negative source depth stays signed in a bipolar Vital
+connection. Normal LFOs reset at phase zero and random LFOs reset per note as a
+deliberate export policy, independent of Poison RETRIG; the matching Poison
+reset-phase offset remains unmeasured. Random uses Vital's sample-and-hold
+generator. Random fade and LFO XFM are not implemented.
 
 ## Modulation and effects
 
