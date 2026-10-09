@@ -1,0 +1,14 @@
+{
+  "0": "Format and Fidelity Evidence",
+  "1": "Graph Build Dependencies",
+  "2": "Source Parsing and Conversion Data",
+  "3": "CLI and Calibration Profiles",
+  "4": "Vital Assets and Serialization",
+  "5": "CLI and Parser Tests",
+  "6": "Synthesis Parameter Mapping",
+  "7": "Controlled Waveform Analysis",
+  "8": "Converter and Mapping Tests",
+  "9": "Waveform Fidelity Findings",
+  "10": "Controlled Recording Experiment",
+  "11": "Package Metadata"
+}

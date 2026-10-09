@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poison202-to-vital"
+version = "0.1.0"
+description = "Evidence-aware Poison-202 preset and bank converter for Vital"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+202tovital = "poison202_to_vital.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+poison202_to_vital = ["data/*.json"]

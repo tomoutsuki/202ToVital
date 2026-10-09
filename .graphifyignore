@@ -1,0 +1,8 @@
+.venv/
+.git/
+examples/
+output/
+graphify-out/
+src/poison202_to_vital/data/
+__pycache__/
+*.egg-info/
