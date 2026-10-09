@@ -10,7 +10,7 @@ import zipfile
 
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
-from poison202_to_vital.convert import convert
+from poison202_to_vital.convert import convert, supersaw_blend, supersaw_outer_cents
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -100,6 +100,21 @@ class MappingTests(unittest.TestCase):
         self.assertAlmostEqual(settings[f'modulation_{idx}_amount'] * 96 * .5, 24)
         self.assertEqual(settings[f'modulation_{idx}_bipolar'], 1)
 
+    def test_supersaw_uses_fitted_mix_and_detune_curves(self):
+        zero = convert(source(O1TY=4, O1PW=0, O1PM=0)).preset['settings']
+        middle = convert(source(O1TY=4, O1PW=.5, O1PM=.5)).preset['settings']
+        full = convert(source(O1TY=4, O1PW=1, O1PM=1)).preset['settings']
+
+        self.assertEqual(zero['osc_1_unison_voices'], 7)
+        self.assertAlmostEqual(zero['osc_1_unison_blend'], 0.036917, places=5)
+        self.assertEqual(zero['osc_1_unison_detune'], 0)
+        self.assertEqual(zero['osc_1_detune_range'], 20)
+        self.assertEqual(zero['osc_1_detune_power'], 1)
+        self.assertAlmostEqual(middle['osc_1_unison_blend'], supersaw_blend(.5))
+        self.assertAlmostEqual(middle['osc_1_unison_detune'] * 20, supersaw_outer_cents(.5))
+        self.assertAlmostEqual(full['osc_1_unison_blend'], 0.919709, places=5)
+        self.assertAlmostEqual(full['osc_1_unison_detune'] * 20, 176.686, places=3)
+
     def test_effect_bypass_and_random_lfo(self):
         settings = convert(source(FXON=0, FX1S=1, FX1L=1, L1TY=5, **{'L1>F': .2})).preset['settings']
         self.assertNotIn('distortion_on', settings)
@@ -115,7 +130,8 @@ class MappingTests(unittest.TestCase):
 
     def test_profile_validation(self):
         for values in [{'envelope_exponent': math.nan}, {'cutoff_max_hz': 10}, {'envelope_max_seconds': 40},
-                       {'fine_tune_cents': 'wrong'}, {'waveform_order': ['sine']}]:
+                       {'fine_tune_cents': 'wrong'}, {'supersaw_detune_range_cents': 49},
+                       {'supersaw_detune_power': 0}, {'waveform_order': ['sine']}]:
             with self.assertRaises(ValueError):
                 Profile(**values)
         for bpm in (0, 301, math.inf, math.nan):

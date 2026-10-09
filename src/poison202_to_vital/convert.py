@@ -7,6 +7,45 @@ from .profile import Profile
 from . import vital
 
 
+def supersaw_detune_curve(value: float) -> float:
+    """JP-8000/Szabo-style normalized Super Saw detune fit.
+
+    Poison's controlled 0/25/50/75/100 sweep closely matched this curve. The
+    fitted intercept is deliberately suppressed at zero: the available short
+    Poison zero-detune recording cannot establish a real nonzero spread there.
+    """
+    value = max(0.0, min(1.0, value))
+    if value == 0.0:
+        return 0.0
+    return (((((((((((10028.7312891634 * value - 50818.8652045924) * value
+                    + 111363.4808729368) * value - 138150.6761080548) * value
+                  + 106649.6679158292) * value - 53046.9642751875) * value
+                + 17019.9518580080) * value - 3425.0836591318) * value
+              + 404.2703938388) * value - 24.1878824391) * value
+            + 0.6717417634) * value + 0.0030115596)
+
+
+def supersaw_blend(value: float) -> float:
+    """Map Poison MIX to Vital Blend by matching center/side gain ratios.
+
+    The Poison sweep follows the JP/Szabo center and per-side gain curves.
+    Vital uses a different gain law, so a direct control-value copy is wrong.
+    """
+    value = max(0.0, min(1.0, value))
+    center = 0.99785 - 0.55366 * value
+    side = 0.044372 + 1.2841 * value - 0.73764 * value * value
+    ratio = side / center
+    discriminant = (2.0 + ratio) ** 2 - (20.0 / 3.0) * ratio
+    return ((2.0 + ratio) - math.sqrt(max(0.0, discriminant))) / 2.0
+
+
+def supersaw_outer_cents(value: float) -> float:
+    """Approximate positive outer-voice separation measured in Poison."""
+    if value <= 0.0:
+        return 0.0
+    return 1200.0 * math.log2(1.0 + 0.10745242 * supersaw_detune_curve(value))
+
+
 @dataclass
 class Conversion:
     preset: dict
@@ -115,9 +154,12 @@ class Converter:
             self.set(prefix + '_random_phase', 0)
             if shape == 'supersaw':
                 self.set(prefix + '_unison_voices', 7)
-                self.set(prefix + '_unison_blend', width)
-                self.set(prefix + '_unison_detune', 10 * math.sqrt(pwm))
-                self.warn('supersaw', 'Seven-voice Vital unison approximates Poison Super Saw; detune distribution and blend differ.')
+                self.set(prefix + '_unison_blend', supersaw_blend(width))
+                self.set(prefix + '_detune_range', p.supersaw_detune_range_cents)
+                self.set(prefix + '_detune_power', p.supersaw_detune_power)
+                outer_cents = supersaw_outer_cents(pwm)
+                self.set(prefix + '_unison_detune', outer_cents / p.supersaw_detune_range_cents)
+                self.warn('supersaw', 'Seven-voice Vital unison uses fitted nonlinear Poison MIX and DETUNE curves. Voice layout, phase behavior and the underlying waveform remain approximate.')
             elif shape == 'pulse' and pwm:
                 self.warn('unsupported', f'{tag}PM: dynamic PWM routing is unknown; static pulse width is retained.')
             # Parallel TVA is approximated before each filter. Serial TVA1 remains

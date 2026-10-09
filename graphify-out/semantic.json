@@ -576,6 +576,41 @@
       "captured_at": null,
       "author": null,
       "contributor": null
+    },
+    {
+      "id": "docs_mapping_fitted_supersaw_control_law",
+      "label": "Fitted Super Saw MIX and DETUNE law",
+      "file_type": "rationale",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Controlled MIX/DETUNE recordings support a JP-8000/Szabo-style nonlinear control law, while the oscillator waveform, phase behavior and voice layout remain unverified."
+    },
+    {
+      "id": "docs_mapping_supersaw_zero_detune_policy",
+      "label": "Zero-detune clamp policy",
+      "file_type": "rationale",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The fitted curve is clamped to zero at Poison DETUNE=0 because the recordings did not establish a nonzero detune floor."
+    },
+    {
+      "id": "docs_controlled_waveform_review_revised_supersaw_mapping",
+      "label": "Revised Super Saw mapping evidence",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/controlled-waveform-review.md",
+      "source_location": "Super Saw analysis update",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
     }
   ],
   "edges": [
@@ -1198,6 +1233,46 @@
       "source_file": "/home/tomas/202ToVital/202ToVital/docs/controlled-waveform-review.md",
       "source_location": "line 18",
       "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_fitted_supersaw_control_law",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_fitted_supersaw_control_law",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_zero_detune_policy",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_controlled_waveform_review_revised_supersaw_mapping",
+      "target": "docs_mapping_fitted_supersaw_control_law",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/controlled-waveform-review.md",
+      "source_location": "Super Saw analysis update",
+      "weight": 1.0
     }
   ],
   "hyperedges": [
@@ -1241,6 +1316,20 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "/home/tomas/202ToVital/202ToVital/docs/controlled-waveform-review.md"
+    },
+    {
+      "id": "supersaw_fitted_mapping",
+      "label": "Fitted Super Saw control mapping",
+      "nodes": [
+        "docs_mapping_fitted_supersaw_control_law",
+        "src_poison202_to_vital_convert_supersaw_blend",
+        "src_poison202_to_vital_convert_supersaw_detune_curve",
+        "src_poison202_to_vital_convert_supersaw_outer_cents"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md"
     }
   ],
   "input_tokens": 0,

@@ -21,6 +21,8 @@ class Profile:
     eq_gain_db: float = 12.0
     portamento_max_seconds: float = 2.0
     output_gain_db: float = -18.0
+    supersaw_detune_range_cents: float = 20.0
+    supersaw_detune_power: float = 1.0
     waveform_order: tuple[str, ...] = ("saw", "pulse", "sine", "triangle", "supersaw")
     filter_order: tuple[str, ...] = ("off", "lp", "bp", "hp", "peak", "notch")
     lfo_order: tuple[str, ...] = ("triangle", "sine", "saw", "square", "trapezoid", "random")
@@ -31,6 +33,14 @@ class Profile:
         for field in fields(self):
             value = getattr(self, field.name)
             if field.name in ('name', 'waveform_order', 'filter_order', 'lfo_order'):
+                continue
+            if field.name == 'supersaw_detune_range_cents':
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 48:
+                    raise ValueError('Profile supersaw_detune_range_cents must be between 0 and 48')
+                continue
+            if field.name == 'supersaw_detune_power':
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 5:
+                    raise ValueError('Profile supersaw_detune_power must be between 0 and 5')
                 continue
             if field.name == 'output_gain_db':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not -60 <= value <= 6:

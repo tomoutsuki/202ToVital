@@ -10,9 +10,16 @@ Do not label these mappings acoustically verified.
 
 `O1TY`/`O2TY` are provisionally ordered saw, pulse, sine, triangle, supersaw.
 Wave Source assets are generated from analytic waveforms, with no external table
-files. Pulse width assumes normalized PW maps 50%..99% duty. Super Saw uses seven
-Vital unison voices, PW as unison blend and PM as detune. Poison mix/detune laws
-are not known. Fine tuning assumes +/-100 cents; tune range is configurable.
+files. Pulse width assumes normalized PW maps 50%..99% duty. A controlled
+Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model: MIX maps through
+the fitted center/side gain ratio into Vital Blend, while DETUNE maps through the
+JP-style nonlinear detune curve to the measured outer-voice cents. The converter
+uses seven Vital voices, a 20-cent Vital detune range and detune power 1.0.
+It clamps the fitted curve to zero at Poison DETUNE=0 because a nonzero floor was
+not established. The source voice layout, phase behavior and waveform remain
+unverified, so this is a better parameter-layer approximation rather than a
+complete Super Saw reconstruction. Fine tuning assumes +/-100 cents; tune range
+is configurable.
 
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs

@@ -1,17 +1,17 @@
 {
-  "node_count": 165,
+  "node_count": 175,
   "unverified_node_count": 0,
-  "raw_edge_count": 369,
+  "raw_edge_count": 387,
   "non_object_edges": 0,
   "missing_endpoint_edges": 0,
   "dangling_endpoint_edges": 69,
   "external_reference_edges": 0,
   "self_loop_edges": 1,
-  "valid_candidate_edges": 300,
+  "valid_candidate_edges": 318,
   "exact_duplicate_edges": 0,
-  "directed_unique_endpoint_pairs": 292,
+  "directed_unique_endpoint_pairs": 310,
   "directed_same_endpoint_collapsed_edges": 8,
-  "undirected_unique_endpoint_pairs": 292,
+  "undirected_unique_endpoint_pairs": 310,
   "undirected_same_endpoint_collapsed_edges": 8,
   "same_endpoint_group_count": 7,
   "relation_variant_groups": 7,
@@ -19,8 +19,8 @@
   "source_location_variant_groups": 0,
   "context_variant_groups": 0,
   "post_build_graph_type": "Graph",
-  "post_build_node_count": 200,
-  "post_build_edge_count": 361,
+  "post_build_node_count": 210,
+  "post_build_edge_count": 379,
   "post_build_error": "",
   "producer_suppression": {
     "path": "/home/tomas/.local/share/uv/tools/graphifyy/lib/python3.14/site-packages/graphify/extract.py",
@@ -115,8 +115,8 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L365",
-        "L368"
+        "L407",
+        "L410"
       ],
       "contexts": [
         "",
@@ -136,8 +136,8 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L348",
-        "L362"
+        "L390",
+        "L404"
       ],
       "contexts": [
         "call",
@@ -156,7 +156,7 @@
         "src/poison202_to_vital/convert.py"
       ],
       "source_locations": [
-        "L365"
+        "L407"
       ],
       "contexts": [
         "",

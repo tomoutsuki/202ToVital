@@ -31,6 +31,20 @@
         "source_file": "docs/format.md"
       },
       {
+        "id": "supersaw_fitted_mapping",
+        "label": "Fitted Super Saw control mapping",
+        "nodes": [
+          "docs_mapping_fitted_supersaw_control_law",
+          "src_poison202_to_vital_convert_supersaw_blend",
+          "src_poison202_to_vital_convert_supersaw_detune_curve",
+          "src_poison202_to_vital_convert_supersaw_outer_cents"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "docs/mapping.md"
+      },
+      {
         "id": "docs_mapping_calibration_evidence_gap",
         "label": "Unmeasured Poison mappings need calibration",
         "nodes": [
@@ -48,17 +62,30 @@
   },
   "nodes": [
     {
+      "id": "src_poison202_to_vital_profile_profile",
+      "label": "Profile",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "profile",
+      "source_file": "src/poison202_to_vital/profile.py",
+      "source_location": "L9"
+    },
+    {
       "id": "src_poison202_to_vital_convert_conversion",
       "label": "Conversion",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "conversion",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L11"
+      "source_location": "L50"
     },
     {
       "id": "src_poison202_to_vital_poison_bank",
@@ -66,7 +93,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "bank",
@@ -79,7 +106,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "formaterror",
@@ -92,7 +119,7 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "preset",
@@ -100,17 +127,17 @@
       "source_location": "L21"
     },
     {
-      "id": "src_poison202_to_vital_profile_profile",
-      "label": "Profile",
+      "id": "tests_test_converter_mappingtests",
+      "label": "MappingTests",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "profile",
-      "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L9"
+      "norm_label": "mappingtests",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L80"
     },
     {
       "id": "tests_test_converter_clitests",
@@ -123,7 +150,7 @@
       "file_type": "code",
       "norm_label": "clitests",
       "source_file": "tests/test_converter.py",
-      "source_location": "L145"
+      "source_location": "L161"
     },
     {
       "id": "tests_test_converter_parsertests",
@@ -149,27 +176,242 @@
       "file_type": "code",
       "norm_label": "converter",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L16"
+      "source_location": "L55"
     },
     {
-      "id": "tests_test_converter_mappingtests",
-      "label": "MappingTests",
+      "id": "src_poison202_to_vital_cli_json_bytes",
+      "label": "json_bytes()",
       "_callable": true,
-      "_callable_class": true,
       "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
       "file_type": "code",
-      "norm_label": "mappingtests",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L80"
+      "norm_label": "json_bytes()",
+      "source_file": "src/poison202_to_vital/cli.py",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_poison202_to_vital_cli_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/poison202_to_vital/cli.py",
+      "source_location": "L108"
+    },
+    {
+      "id": "src_poison202_to_vital_cli_parser",
+      "label": "parser()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "parser()",
+      "source_file": "src/poison202_to_vital/cli.py",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_poison202_to_vital_cli_run_conversion",
+      "label": "run_conversion()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "run_conversion()",
+      "source_file": "src/poison202_to_vital/cli.py",
+      "source_location": "L55"
+    },
+    {
+      "id": "src_poison202_to_vital_cli_select",
+      "label": "select()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "select()",
+      "source_file": "src/poison202_to_vital/cli.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_poison202_to_vital_profile_profile_load",
+      "label": ".load()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": ".load()",
+      "source_file": "src/poison202_to_vital/profile.py",
+      "source_location": "L70"
+    },
+    {
+      "id": "src_poison202_to_vital_profile_profile_post_init",
+      "label": ".__post_init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": ".__post_init__()",
+      "source_file": "src/poison202_to_vital/profile.py",
+      "source_location": "L30"
+    },
+    {
+      "id": "src_poison202_to_vital_profile_profile_seconds",
+      "label": ".seconds()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": ".seconds()",
+      "source_file": "src/poison202_to_vital/profile.py",
+      "source_location": "L63"
+    },
+    {
+      "id": "src_poison202_to_vital_profile_profile_to_dict",
+      "label": ".to_dict()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": ".to_dict()",
+      "source_file": "src/poison202_to_vital/profile.py",
+      "source_location": "L66"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_atomic_write",
+      "label": "atomic_write()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "atomic_write()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L119"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_bundle",
+      "label": "bundle()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "bundle()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L107"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_init_preset",
+      "label": "init_preset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "init_preset()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L63"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_line",
+      "label": "line()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "line()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L24"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_noise_sample",
+      "label": "noise_sample()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "noise_sample()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L56"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_safe_name",
+      "label": "safe_name()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "safe_name()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_schema",
+      "label": "schema()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "schema()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_serialize",
+      "label": "serialize()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "serialize()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L95"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_validate",
+      "label": "validate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "validate()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L75"
+    },
+    {
+      "id": "src_poison202_to_vital_vital_wavetable",
+      "label": "wavetable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "wavetable()",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L32"
     },
     {
       "id": "tools_build_graph_main",
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "file_type": "code",
       "norm_label": "main()",
@@ -181,7 +423,7 @@
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "file_type": "code",
       "norm_label": "main()",
@@ -193,7 +435,7 @@
       "label": "number()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "file_type": "code",
       "norm_label": "number()",
@@ -205,7 +447,7 @@
       "label": "calc()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "file_type": "code",
       "norm_label": "calc()",
@@ -217,7 +459,7 @@
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "file_type": "code",
       "norm_label": "main()",
@@ -229,7 +471,7 @@
       "label": "load()",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "load()",
@@ -241,7 +483,7 @@
       "label": "parse()",
       "_callable": true,
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "parse()",
@@ -249,232 +491,172 @@
       "source_location": "L35"
     },
     {
-      "id": "src_poison202_to_vital_cli_json_bytes",
-      "label": "json_bytes()",
+      "id": "src_poison202_to_vital_convert_convert",
+      "label": "convert()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "json_bytes()",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L13"
+      "norm_label": "convert()",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L407"
     },
     {
-      "id": "src_poison202_to_vital_cli_main",
-      "label": "main()",
+      "id": "src_poison202_to_vital_convert_supersaw_blend",
+      "label": "supersaw_blend()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L108"
-    },
-    {
-      "id": "src_poison202_to_vital_cli_parser",
-      "label": "parser()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "parser()",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_poison202_to_vital_cli_run_conversion",
-      "label": "run_conversion()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "run_conversion()",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L55"
-    },
-    {
-      "id": "src_poison202_to_vital_cli_select",
-      "label": "select()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "select()",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L41"
-    },
-    {
-      "id": "src_poison202_to_vital_profile_profile_load",
-      "label": ".load()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": ".load()",
-      "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L60"
-    },
-    {
-      "id": "src_poison202_to_vital_profile_profile_post_init",
-      "label": ".__post_init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": ".__post_init__()",
-      "source_file": "src/poison202_to_vital/profile.py",
+      "norm_label": "supersaw_blend()",
+      "source_file": "src/poison202_to_vital/convert.py",
       "source_location": "L28"
     },
     {
-      "id": "src_poison202_to_vital_profile_profile_seconds",
-      "label": ".seconds()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": ".seconds()",
-      "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L53"
-    },
-    {
-      "id": "src_poison202_to_vital_profile_profile_to_dict",
-      "label": ".to_dict()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": ".to_dict()",
-      "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L56"
-    },
-    {
-      "id": "src_poison202_to_vital_vital_atomic_write",
-      "label": "atomic_write()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "atomic_write()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L119"
-    },
-    {
-      "id": "src_poison202_to_vital_vital_bundle",
-      "label": "bundle()",
+      "id": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "label": "supersaw_detune_curve()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "bundle()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L107"
+      "norm_label": "supersaw_detune_curve()",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L10"
     },
     {
-      "id": "src_poison202_to_vital_vital_init_preset",
-      "label": "init_preset()",
+      "id": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "label": "supersaw_outer_cents()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "init_preset()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L63"
+      "norm_label": "supersaw_outer_cents()",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L42"
     },
     {
-      "id": "src_poison202_to_vital_vital_line",
-      "label": "line()",
+      "id": "tests_test_converter_mappingtests_test_all_real_presets_validate",
+      "label": ".test_all_real_presets_validate()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "line()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L24"
+      "norm_label": ".test_all_real_presets_validate()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L152"
     },
     {
-      "id": "src_poison202_to_vital_vital_noise_sample",
-      "label": "noise_sample()",
+      "id": "tests_test_converter_mappingtests_test_assets_and_determinism",
+      "label": ".test_assets_and_determinism()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "noise_sample()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L56"
+      "norm_label": ".test_assets_and_determinism()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L141"
     },
     {
-      "id": "src_poison202_to_vital_vital_safe_name",
-      "label": "safe_name()",
+      "id": "tests_test_converter_mappingtests_test_effect_bypass_and_random_lfo",
+      "label": ".test_effect_bypass_and_random_lfo()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "safe_name()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L100"
+      "norm_label": ".test_effect_bypass_and_random_lfo()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L118"
     },
     {
-      "id": "src_poison202_to_vital_vital_schema",
-      "label": "schema()",
+      "id": "tests_test_converter_mappingtests_test_pitch_bipolar_depth_uses_full_range",
+      "label": ".test_pitch_bipolar_depth_uses_full_range()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "schema()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L20"
+      "norm_label": ".test_pitch_bipolar_depth_uses_full_range()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L97"
     },
     {
-      "id": "src_poison202_to_vital_vital_serialize",
-      "label": "serialize()",
+      "id": "tests_test_converter_mappingtests_test_profile_validation",
+      "label": ".test_profile_validation()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "serialize()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L95"
+      "norm_label": ".test_profile_validation()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L131"
     },
     {
-      "id": "src_poison202_to_vital_vital_validate",
-      "label": "validate()",
+      "id": "tests_test_converter_mappingtests_test_series_and_mono",
+      "label": ".test_series_and_mono()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "validate()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L75"
+      "norm_label": ".test_series_and_mono()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L89"
     },
     {
-      "id": "src_poison202_to_vital_vital_wavetable",
-      "label": "wavetable()",
+      "id": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
+      "label": ".test_supersaw_uses_fitted_mix_and_detune_curves()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "code",
-      "norm_label": "wavetable()",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L32"
+      "norm_label": ".test_supersaw_uses_fitted_mix_and_detune_curves()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L103"
+    },
+    {
+      "id": "tests_test_converter_mappingtests_test_unknown_and_unsupported_are_reported",
+      "label": ".test_unknown_and_unsupported_are_reported()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
+      "file_type": "code",
+      "norm_label": ".test_unknown_and_unsupported_are_reported()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L124"
+    },
+    {
+      "id": "tests_test_converter_mappingtests_test_vital_envelope_and_volume_units",
+      "label": ".test_vital_envelope_and_volume_units()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
+      "file_type": "code",
+      "norm_label": ".test_vital_envelope_and_volume_units()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L81"
+    },
+    {
+      "id": "tests_test_converter_source",
+      "label": "source()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
+      "file_type": "code",
+      "norm_label": "source()",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L33"
     },
     {
       "id": "tests_test_converter_clitests_run_cli",
@@ -486,7 +668,7 @@
       "file_type": "code",
       "norm_label": ".run_cli()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L153"
+      "source_location": "L169"
     },
     {
       "id": "tests_test_converter_clitests_setup",
@@ -498,7 +680,7 @@
       "file_type": "code",
       "norm_label": ".setup()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L146"
+      "source_location": "L162"
     },
     {
       "id": "tests_test_converter_clitests_test_bank_zip_layout_and_duplicates",
@@ -510,7 +692,7 @@
       "file_type": "code",
       "norm_label": ".test_bank_zip_layout_and_duplicates()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L157"
+      "source_location": "L173"
     },
     {
       "id": "tests_test_converter_clitests_test_existing_report_prevents_any_write",
@@ -522,7 +704,7 @@
       "file_type": "code",
       "norm_label": ".test_existing_report_prevents_any_write()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L189"
+      "source_location": "L205"
     },
     {
       "id": "tests_test_converter_clitests_test_malformed_profile",
@@ -534,7 +716,7 @@
       "file_type": "code",
       "norm_label": ".test_malformed_profile()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L197"
+      "source_location": "L213"
     },
     {
       "id": "tests_test_converter_clitests_test_protect_input_and_report_collisions",
@@ -546,7 +728,7 @@
       "file_type": "code",
       "norm_label": ".test_protect_input_and_report_collisions()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L181"
+      "source_location": "L197"
     },
     {
       "id": "tests_test_converter_clitests_test_selection_directory_and_strict",
@@ -558,7 +740,7 @@
       "file_type": "code",
       "norm_label": ".test_selection_directory_and_strict()",
       "source_file": "tests/test_converter.py",
-      "source_location": "L169"
+      "source_location": "L185"
     },
     {
       "id": "tests_test_converter_encode",
@@ -642,7 +824,7 @@
       "file_type": "code",
       "norm_label": ".cutoff()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L79"
+      "source_location": "L118"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_effects",
@@ -654,7 +836,7 @@
       "file_type": "code",
       "norm_label": ".effects()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L294"
+      "source_location": "L336"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_envelope",
@@ -666,7 +848,7 @@
       "file_type": "code",
       "norm_label": ".envelope()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L73"
+      "source_location": "L112"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_filters",
@@ -678,7 +860,7 @@
       "file_type": "code",
       "norm_label": ".filters()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L156"
+      "source_location": "L198"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_init",
@@ -690,7 +872,7 @@
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17"
+      "source_location": "L56"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_interactions",
@@ -702,7 +884,7 @@
       "file_type": "code",
       "norm_label": ".interactions()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L177"
+      "source_location": "L219"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_lfos",
@@ -714,7 +896,7 @@
       "file_type": "code",
       "norm_label": ".lfos()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L195"
+      "source_location": "L237"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_mod",
@@ -726,7 +908,7 @@
       "file_type": "code",
       "norm_label": ".mod()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L58"
+      "source_location": "L97"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_oscillators",
@@ -738,7 +920,7 @@
       "file_type": "code",
       "norm_label": ".oscillators()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L100"
+      "source_location": "L139"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_performance",
@@ -750,7 +932,7 @@
       "file_type": "code",
       "norm_label": ".performance()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L240"
+      "source_location": "L282"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_read",
@@ -762,7 +944,7 @@
       "file_type": "code",
       "norm_label": ".read()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L32"
+      "source_location": "L71"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_run",
@@ -774,7 +956,7 @@
       "file_type": "code",
       "norm_label": ".run()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L348"
+      "source_location": "L390"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_set",
@@ -786,7 +968,7 @@
       "file_type": "code",
       "norm_label": ".set()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L47"
+      "source_location": "L86"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_tempo",
@@ -798,7 +980,7 @@
       "file_type": "code",
       "norm_label": ".tempo()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L84"
+      "source_location": "L123"
     },
     {
       "id": "src_poison202_to_vital_convert_converter_warn",
@@ -810,7 +992,7 @@
       "file_type": "code",
       "norm_label": ".warn()",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L27"
+      "source_location": "L66"
     },
     {
       "id": "tools_compare_controlled_waveforms_activity",
@@ -921,196 +1103,109 @@
       "source_location": "L101"
     },
     {
-      "id": "src_poison202_to_vital_convert_convert",
-      "label": "convert()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": "convert()",
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L365"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_all_real_presets_validate",
-      "label": ".test_all_real_presets_validate()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_all_real_presets_validate()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L136"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_assets_and_determinism",
-      "label": ".test_assets_and_determinism()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_assets_and_determinism()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L125"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_effect_bypass_and_random_lfo",
-      "label": ".test_effect_bypass_and_random_lfo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_effect_bypass_and_random_lfo()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L103"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_pitch_bipolar_depth_uses_full_range",
-      "label": ".test_pitch_bipolar_depth_uses_full_range()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_pitch_bipolar_depth_uses_full_range()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L97"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_profile_validation",
-      "label": ".test_profile_validation()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_profile_validation()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L116"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_series_and_mono",
-      "label": ".test_series_and_mono()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_series_and_mono()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L89"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_unknown_and_unsupported_are_reported",
-      "label": ".test_unknown_and_unsupported_are_reported()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_unknown_and_unsupported_are_reported()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L109"
-    },
-    {
-      "id": "tests_test_converter_mappingtests_test_vital_envelope_and_volume_units",
-      "label": ".test_vital_envelope_and_volume_units()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": ".test_vital_envelope_and_volume_units()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L81"
-    },
-    {
-      "id": "tests_test_converter_source",
-      "label": "source()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Converter and Mapping Tests",
-      "file_type": "code",
-      "norm_label": "source()",
-      "source_file": "tests/test_converter.py",
-      "source_location": "L33"
-    },
-    {
-      "id": "tools_build_graph",
-      "label": "build_graph.py",
+      "id": "argumentparser",
+      "label": "ArgumentParser",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
       "file_type": "code",
-      "norm_label": "build_graph.py",
-      "source_file": "tools/build_graph.py",
+      "norm_label": "argumentparser",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_poison202_to_vital_cli",
+      "label": "cli.py",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "cli.py",
+      "source_file": "src/poison202_to_vital/cli.py",
       "source_location": "L1"
     },
     {
-      "id": "tools_extract_vital_schema",
-      "label": "extract_vital_schema.py",
+      "id": "src_poison202_to_vital_main",
+      "label": "__main__.py",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
       "file_type": "code",
-      "norm_label": "extract_vital_schema.py",
-      "source_file": "tools/extract_vital_schema.py",
+      "norm_label": "__main__.py",
+      "source_file": "src/poison202_to_vital/__main__.py",
       "source_location": "L1"
     },
     {
-      "id": "tools_validate_native",
-      "label": "validate_native.py",
+      "id": "src_poison202_to_vital_profile_py_path",
+      "label": "Path",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
       "file_type": "code",
-      "norm_label": "validate_native.py",
-      "source_file": "tools/validate_native.py",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_poison202_to_vital_vital",
+      "label": "vital.py",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "vital.py",
+      "source_file": "src/poison202_to_vital/vital.py",
       "source_location": "L1"
     },
     {
-      "id": "tools_build_graph_rationale_1",
-      "label": "Build/label the project graph from AST plus host-extracted semantic JSON. Run\u2026",
+      "id": "src_poison202_to_vital_vital_py_path",
+      "label": "Path",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_poison202_to_vital_cli_rationale_1",
+      "label": "CLI entry point; conversion is offline and has no third-party dependencies.",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
       "file_type": "rationale",
-      "norm_label": "build/label the project graph from ast plus host-extracted semantic json. run...",
-      "source_file": "tools/build_graph.py",
+      "norm_label": "cli entry point; conversion is offline and has no third-party dependencies.",
+      "source_file": "src/poison202_to_vital/cli.py",
       "source_location": "L1"
     },
     {
-      "id": "tools_extract_vital_schema_rationale_1",
-      "label": "Regenerate numeric Vital control metadata from the supplied 1.0.6 source. Run:\u2026",
+      "id": "src_poison202_to_vital_vital_rationale_1",
+      "label": "Vital 1.0.6 serialization, self-contained DSP assets, and bank packaging.",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
       "file_type": "rationale",
-      "norm_label": "regenerate numeric vital control metadata from the supplied 1.0.6 source. run:...",
-      "source_file": "tools/extract_vital_schema.py",
+      "norm_label": "vital 1.0.6 serialization, self-contained dsp assets, and bank packaging.",
+      "source_file": "src/poison202_to_vital/vital.py",
       "source_location": "L1"
     },
     {
-      "id": "tools_validate_native_rationale_1",
-      "label": "Optional native compatibility check using Vita; never implies Poison fidelity.\u2026",
+      "id": "src_poison202_to_vital_vital_rationale_120",
+      "label": "Publish a complete file; default link operation refuses overwrite atomically.",
       "_origin": "ast",
       "community": 1,
-      "community_name": "Graph Build Dependencies",
+      "community_name": "CLI and Vital Assets",
       "file_type": "rationale",
-      "norm_label": "optional native compatibility check using vita; never implies poison fidelity....",
-      "source_file": "tools/validate_native.py",
-      "source_location": "L1"
+      "norm_label": "publish a complete file; default link operation refuses overwrite atomically.",
+      "source_file": "src/poison202_to_vital/vital.py",
+      "source_location": "L120"
     },
     {
       "id": "pkg_poison202_to_vital",
       "label": "poison202-to-vital",
       "_origin": "ast",
-      "community": 11,
+      "community": 10,
       "community_name": "Package Metadata",
       "ecosystem": "python",
       "file_type": "code",
@@ -1121,10 +1216,76 @@
       "version": "0.1.0"
     },
     {
+      "id": "tools_build_graph",
+      "label": "build_graph.py",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "code",
+      "norm_label": "build_graph.py",
+      "source_file": "tools/build_graph.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tools_extract_vital_schema",
+      "label": "extract_vital_schema.py",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "code",
+      "norm_label": "extract_vital_schema.py",
+      "source_file": "tools/extract_vital_schema.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tools_validate_native",
+      "label": "validate_native.py",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "code",
+      "norm_label": "validate_native.py",
+      "source_file": "tools/validate_native.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tools_build_graph_rationale_1",
+      "label": "Build/label the project graph from AST plus host-extracted semantic JSON. Run\u2026",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "rationale",
+      "norm_label": "build/label the project graph from ast plus host-extracted semantic json. run...",
+      "source_file": "tools/build_graph.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tools_extract_vital_schema_rationale_1",
+      "label": "Regenerate numeric Vital control metadata from the supplied 1.0.6 source. Run:\u2026",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "rationale",
+      "norm_label": "regenerate numeric vital control metadata from the supplied 1.0.6 source. run:...",
+      "source_file": "tools/extract_vital_schema.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tools_validate_native_rationale_1",
+      "label": "Optional native compatibility check using Vita; never implies Poison fidelity.\u2026",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Graph Build Dependencies",
+      "file_type": "rationale",
+      "norm_label": "optional native compatibility check using vita; never implies poison fidelity....",
+      "source_file": "tools/validate_native.py",
+      "source_location": "L1"
+    },
+    {
       "id": "src_poison202_to_vital_convert",
       "label": "convert.py",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "convert.py",
@@ -1135,7 +1296,7 @@
       "id": "src_poison202_to_vital_init",
       "label": "__init__.py",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "__init__.py",
@@ -1146,7 +1307,7 @@
       "id": "src_poison202_to_vital_poison",
       "label": "poison.py",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "poison.py",
@@ -1157,7 +1318,7 @@
       "id": "src_poison202_to_vital_poison_py_path",
       "label": "Path",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "path",
@@ -1168,7 +1329,7 @@
       "id": "src_poison202_to_vital_profile",
       "label": "profile.py",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "profile.py",
@@ -1179,7 +1340,7 @@
       "id": "tests_test_converter",
       "label": "test_converter.py",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "test_converter.py",
@@ -1190,7 +1351,7 @@
       "id": "valueerror",
       "label": "ValueError",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "code",
       "norm_label": "valueerror",
@@ -1201,7 +1362,7 @@
       "id": "src_poison202_to_vital_convert_rationale_1",
       "label": "Best-effort mappings; all unknown Poison laws are reported, never asserted\u2026",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "best-effort mappings; all unknown poison laws are reported, never asserted...",
@@ -1212,7 +1373,7 @@
       "id": "src_poison202_to_vital_init_rationale_1",
       "label": "Poison-202 to Vital conversion. Runtime uses only the Python standard library.",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "poison-202 to vital conversion. runtime uses only the python standard library.",
@@ -1223,7 +1384,7 @@
       "id": "src_poison202_to_vital_poison_rationale_1",
       "label": "Read the tagged little-endian P202 layout observed in the supplied exports.\u2026",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "read the tagged little-endian p202 layout observed in the supplied exports....",
@@ -1234,7 +1395,7 @@
       "id": "src_poison202_to_vital_poison_rationale_17",
       "label": "An unsupported or malformed source export.",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "an unsupported or malformed source export.",
@@ -1245,7 +1406,7 @@
       "id": "src_poison202_to_vital_poison_rationale_36",
       "label": "Validate bounds and framing before reading any parameter values.",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "validate bounds and framing before reading any parameter values.",
@@ -1256,7 +1417,7 @@
       "id": "src_poison202_to_vital_profile_rationale_1",
       "label": "Explicit, replaceable assumptions for unmeasured Poison DSP scaling.",
       "_origin": "ast",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "file_type": "rationale",
       "norm_label": "explicit, replaceable assumptions for unmeasured poison dsp scaling.",
@@ -1264,103 +1425,37 @@
       "source_location": "L1"
     },
     {
-      "id": "argumentparser",
-      "label": "ArgumentParser",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "argumentparser",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_poison202_to_vital_cli",
-      "label": "cli.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "cli.py",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_poison202_to_vital_main",
-      "label": "__main__.py",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "__main__.py",
-      "source_file": "src/poison202_to_vital/__main__.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_poison202_to_vital_profile_py_path",
-      "label": "Path",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_poison202_to_vital_vital_py_path",
-      "label": "Path",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "code",
-      "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_poison202_to_vital_cli_rationale_1",
-      "label": "CLI entry point; conversion is offline and has no third-party dependencies.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "rationale",
-      "norm_label": "cli entry point; conversion is offline and has no third-party dependencies.",
-      "source_file": "src/poison202_to_vital/cli.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_poison202_to_vital_vital_rationale_120",
-      "label": "Publish a complete file; default link operation refuses overwrite atomically.",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "CLI and Calibration Profiles",
-      "file_type": "rationale",
-      "norm_label": "publish a complete file; default link operation refuses overwrite atomically.",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L120"
-    },
-    {
-      "id": "src_poison202_to_vital_vital",
-      "label": "vital.py",
+      "id": "src_poison202_to_vital_convert_rationale_11",
+      "label": "JP-8000/Szabo-style normalized Super Saw detune fit. Poison's controlled\u2026",
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "file_type": "code",
-      "norm_label": "vital.py",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L1"
+      "community_name": "Fitted Super Saw Mapping",
+      "file_type": "rationale",
+      "norm_label": "jp-8000/szabo-style normalized super saw detune fit. poison's controlled...",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L11"
     },
     {
-      "id": "src_poison202_to_vital_vital_rationale_1",
-      "label": "Vital 1.0.6 serialization, self-contained DSP assets, and bank packaging.",
+      "id": "src_poison202_to_vital_convert_rationale_29",
+      "label": "Map Poison MIX to Vital Blend by matching center/side gain ratios. The Poison\u2026",
       "_origin": "ast",
       "community": 4,
-      "community_name": "Vital Assets and Serialization",
+      "community_name": "Fitted Super Saw Mapping",
       "file_type": "rationale",
-      "norm_label": "vital 1.0.6 serialization, self-contained dsp assets, and bank packaging.",
-      "source_file": "src/poison202_to_vital/vital.py",
-      "source_location": "L1"
+      "norm_label": "map poison mix to vital blend by matching center/side gain ratios. the poison...",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L29"
+    },
+    {
+      "id": "src_poison202_to_vital_convert_rationale_43",
+      "label": "Approximate positive outer-voice separation measured in Poison.",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
+      "file_type": "rationale",
+      "norm_label": "approximate positive outer-voice separation measured in poison.",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L43"
     },
     {
       "id": "skipunless",
@@ -1985,59 +2080,47 @@
       "source_url": null
     },
     {
-      "id": "docs_controlled_waveform_review_midi_note_mismatch",
-      "label": "Original MIDI 72 versus Vital MIDI 60",
+      "id": "docs_controlled_waveform_review_revised_supersaw_mapping",
+      "label": "Revised Super Saw mapping evidence",
       "author": null,
       "captured_at": null,
-      "community": 10,
-      "community_name": "Controlled Recording Experiment",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "contributor": null,
       "file_type": "concept",
-      "norm_label": "original midi 72 versus vital midi 60",
+      "norm_label": "revised super saw mapping evidence",
       "source_file": "docs/controlled-waveform-review.md",
-      "source_location": "line 5",
+      "source_location": "Super Saw analysis update",
       "source_url": null
     },
     {
-      "id": "docs_controlled_waveform_review_output_level_difference",
-      "label": "Source and Vital output level difference",
+      "id": "docs_mapping_fitted_supersaw_control_law",
+      "label": "Fitted Super Saw MIX and DETUNE law",
       "author": null,
       "captured_at": null,
-      "community": 10,
-      "community_name": "Controlled Recording Experiment",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "contributor": null,
-      "file_type": "concept",
-      "norm_label": "source and vital output level difference",
-      "source_file": "docs/controlled-waveform-review.md",
-      "source_location": "line 16",
+      "file_type": "rationale",
+      "norm_label": "fitted super saw mix and detune law",
+      "rationale": "Controlled MIX/DETUNE recordings support a JP-8000/Szabo-style nonlinear control law, while the oscillator waveform, phase behavior and voice layout remain unverified.",
+      "source_file": "docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
       "source_url": null
     },
     {
-      "id": "docs_controlled_waveform_review_pitch_matched_vita_renders",
-      "label": "Pitch-matched Vita renders at MIDI 72",
+      "id": "docs_mapping_supersaw_zero_detune_policy",
+      "label": "Zero-detune clamp policy",
       "author": null,
       "captured_at": null,
-      "community": 10,
-      "community_name": "Controlled Recording Experiment",
+      "community": 4,
+      "community_name": "Fitted Super Saw Mapping",
       "contributor": null,
-      "file_type": "concept",
-      "norm_label": "pitch-matched vita renders at midi 72",
-      "source_file": "docs/controlled-waveform-review.md",
-      "source_location": "line 5",
-      "source_url": null
-    },
-    {
-      "id": "docs_controlled_waveform_review_controlled_waveform_comparison",
-      "label": "Controlled waveform comparison",
-      "author": null,
-      "captured_at": null,
-      "community": 10,
-      "community_name": "Controlled Recording Experiment",
-      "contributor": null,
-      "file_type": "document",
-      "norm_label": "controlled waveform comparison",
-      "source_file": "docs/controlled-waveform-review.md",
-      "source_location": "line 1",
+      "file_type": "rationale",
+      "norm_label": "zero-detune clamp policy",
+      "rationale": "The fitted curve is clamped to zero at Poison DETUNE=0 because the recordings did not establish a nonzero detune floor.",
+      "source_file": "docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
       "source_url": null
     },
     {
@@ -2045,8 +2128,8 @@
       "label": "Saw strong spectral match",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "concept",
       "norm_label": "saw strong spectral match",
@@ -2059,8 +2142,8 @@
       "label": "Sine strong spectral match",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "concept",
       "norm_label": "sine strong spectral match",
@@ -2073,8 +2156,8 @@
       "label": "Square strong spectral match",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "concept",
       "norm_label": "square strong spectral match",
@@ -2087,8 +2170,8 @@
       "label": "Super Saw mapping deficiency at zero controls",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "concept",
       "norm_label": "super saw mapping deficiency at zero controls",
@@ -2101,8 +2184,8 @@
       "label": "Triangle strong spectral match",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "concept",
       "norm_label": "triangle strong spectral match",
@@ -2115,8 +2198,8 @@
       "label": "Relative steady-state harmonic comparison",
       "author": null,
       "captured_at": null,
-      "community": 9,
-      "community_name": "Waveform Fidelity Findings",
+      "community": 8,
+      "community_name": "Converter and Mapping Tests",
       "contributor": null,
       "file_type": "rationale",
       "norm_label": "relative steady-state harmonic comparison",
@@ -2126,9 +2209,120 @@
       "source_url": null
     },
     {
+      "id": "docs_controlled_waveform_review_midi_note_mismatch",
+      "label": "Original MIDI 72 versus Vital MIDI 60",
+      "author": null,
+      "captured_at": null,
+      "community": 9,
+      "community_name": "Waveform Fidelity Findings",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "original midi 72 versus vital midi 60",
+      "source_file": "docs/controlled-waveform-review.md",
+      "source_location": "line 5",
+      "source_url": null
+    },
+    {
+      "id": "docs_controlled_waveform_review_output_level_difference",
+      "label": "Source and Vital output level difference",
+      "author": null,
+      "captured_at": null,
+      "community": 9,
+      "community_name": "Waveform Fidelity Findings",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "source and vital output level difference",
+      "source_file": "docs/controlled-waveform-review.md",
+      "source_location": "line 16",
+      "source_url": null
+    },
+    {
+      "id": "docs_controlled_waveform_review_pitch_matched_vita_renders",
+      "label": "Pitch-matched Vita renders at MIDI 72",
+      "author": null,
+      "captured_at": null,
+      "community": 9,
+      "community_name": "Waveform Fidelity Findings",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "pitch-matched vita renders at midi 72",
+      "source_file": "docs/controlled-waveform-review.md",
+      "source_location": "line 5",
+      "source_url": null
+    },
+    {
+      "id": "docs_controlled_waveform_review_controlled_waveform_comparison",
+      "label": "Controlled waveform comparison",
+      "author": null,
+      "captured_at": null,
+      "community": 9,
+      "community_name": "Waveform Fidelity Findings",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "controlled waveform comparison",
+      "source_file": "docs/controlled-waveform-review.md",
+      "source_location": "line 1",
+      "source_url": null
+    },
+    {
+      "id": "base64",
+      "label": "base64",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "base64",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "functools",
+      "label": "functools",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "functools",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "importlib_resources",
+      "label": "importlib_resources",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "importlib_resources",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "os",
+      "label": "os",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "os",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "random",
+      "label": "random",
+      "community": 1,
+      "community_name": "CLI and Vital Assets",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "random",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "argparse",
       "label": "argparse",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2139,7 +2333,7 @@
     {
       "id": "ast",
       "label": "ast",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2150,7 +2344,7 @@
     {
       "id": "datetime",
       "label": "datetime",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2161,7 +2355,7 @@
     {
       "id": "graphify_analyze",
       "label": "graphify_analyze",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2172,7 +2366,7 @@
     {
       "id": "graphify_build",
       "label": "graphify_build",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2183,7 +2377,7 @@
     {
       "id": "graphify_cache",
       "label": "graphify_cache",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2194,7 +2388,7 @@
     {
       "id": "graphify_cli",
       "label": "graphify_cli",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2205,7 +2399,7 @@
     {
       "id": "graphify_cluster",
       "label": "graphify_cluster",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2216,7 +2410,7 @@
     {
       "id": "graphify_detect",
       "label": "graphify_detect",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2227,7 +2421,7 @@
     {
       "id": "graphify_diagnostics",
       "label": "graphify_diagnostics",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2238,7 +2432,7 @@
     {
       "id": "graphify_export",
       "label": "graphify_export",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2249,7 +2443,7 @@
     {
       "id": "graphify_extract",
       "label": "graphify_extract",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2260,7 +2454,7 @@
     {
       "id": "graphify_report",
       "label": "graphify_report",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2271,7 +2465,7 @@
     {
       "id": "importlib_metadata",
       "label": "importlib_metadata",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2282,7 +2476,7 @@
     {
       "id": "json",
       "label": "json",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2293,7 +2487,7 @@
     {
       "id": "operator",
       "label": "operator",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2302,20 +2496,9 @@
       "type": "external"
     },
     {
-      "id": "pathlib",
-      "label": "pathlib",
-      "community": 1,
-      "community_name": "Graph Build Dependencies",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pathlib",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "re",
       "label": "re",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2326,7 +2509,7 @@
     {
       "id": "sys",
       "label": "sys",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2337,7 +2520,7 @@
     {
       "id": "zipfile",
       "label": "zipfile",
-      "community": 1,
+      "community": 2,
       "community_name": "Graph Build Dependencies",
       "external": true,
       "file_type": "concept",
@@ -2348,7 +2531,7 @@
     {
       "id": "contextlib",
       "label": "contextlib",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2359,7 +2542,7 @@
     {
       "id": "dataclasses",
       "label": "dataclasses",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2370,7 +2553,7 @@
     {
       "id": "io",
       "label": "io",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2381,7 +2564,7 @@
     {
       "id": "math",
       "label": "math",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2390,9 +2573,20 @@
       "type": "external"
     },
     {
+      "id": "pathlib",
+      "label": "pathlib",
+      "community": 3,
+      "community_name": "Source Parsing and Conversion Data",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "pathlib",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "struct",
       "label": "struct",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2403,7 +2597,7 @@
     {
       "id": "tempfile",
       "label": "tempfile",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
@@ -2414,66 +2608,11 @@
     {
       "id": "unittest",
       "label": "unittest",
-      "community": 2,
+      "community": 3,
       "community_name": "Source Parsing and Conversion Data",
       "external": true,
       "file_type": "concept",
       "norm_label": "unittest",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "base64",
-      "label": "base64",
-      "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "base64",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "functools",
-      "label": "functools",
-      "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "functools",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "importlib_resources",
-      "label": "importlib_resources",
-      "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "importlib_resources",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "os",
-      "label": "os",
-      "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "os",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "random",
-      "label": "random",
-      "community": 4,
-      "community_name": "Vital Assets and Serialization",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "random",
       "source_file": "",
       "type": "external"
     },
@@ -2713,7 +2852,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L368",
+      "source_location": "L410",
       "weight": 1.0
     },
     {
@@ -2725,7 +2864,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L368",
+      "source_location": "L410",
       "weight": 1.0
     },
     {
@@ -2737,7 +2876,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L295",
+      "source_location": "L337",
       "weight": 1.0
     },
     {
@@ -2749,7 +2888,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L302",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -2761,7 +2900,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L310",
+      "source_location": "L352",
       "weight": 1.0
     },
     {
@@ -2773,7 +2912,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L331",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -2785,7 +2924,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L75",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -2797,7 +2936,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L159",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -2809,7 +2948,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L166",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -2821,7 +2960,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L169",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -2833,7 +2972,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L170",
+      "source_location": "L212",
       "weight": 1.0
     },
     {
@@ -2845,7 +2984,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L173",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -2857,7 +2996,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L25",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -2869,7 +3008,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L178",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -2881,7 +3020,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L185",
+      "source_location": "L227",
       "weight": 1.0
     },
     {
@@ -2893,7 +3032,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L196",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -2905,7 +3044,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L207",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -2917,7 +3056,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L212",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -2929,7 +3068,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L227",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -2941,7 +3080,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L102",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter_oscillators",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter_oscillators",
+      "target": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -2953,7 +3116,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L120",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -2965,7 +3128,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L129",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -2977,7 +3140,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L130",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -2989,7 +3152,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L242",
+      "source_location": "L284",
       "weight": 1.0
     },
     {
@@ -3001,7 +3164,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L251",
+      "source_location": "L293",
       "weight": 1.0
     },
     {
@@ -3013,7 +3176,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L255",
+      "source_location": "L297",
       "weight": 1.0
     },
     {
@@ -3025,7 +3188,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L36",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -3037,7 +3200,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L349",
+      "source_location": "L391",
       "weight": 1.0
     },
     {
@@ -3049,7 +3212,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L350",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -3061,7 +3224,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L351",
+      "source_location": "L393",
       "weight": 1.0
     },
     {
@@ -3073,7 +3236,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L352",
+      "source_location": "L394",
       "weight": 1.0
     },
     {
@@ -3085,7 +3248,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L353",
+      "source_location": "L395",
       "weight": 1.0
     },
     {
@@ -3097,7 +3260,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L354",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -3109,7 +3272,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L355",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -3121,7 +3284,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L359",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -3133,7 +3296,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L362",
+      "source_location": "L404",
       "weight": 1.0
     },
     {
@@ -3145,7 +3308,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L55",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -3157,7 +3320,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L96",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -3289,7 +3464,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L155",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -3301,7 +3476,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L151",
+      "source_location": "L167",
       "weight": 1.0
     },
     {
@@ -3313,7 +3488,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L159",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
@@ -3325,7 +3500,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L193",
+      "source_location": "L209",
       "weight": 1.0
     },
     {
@@ -3337,7 +3512,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L200",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -3349,7 +3524,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L184",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -3361,7 +3536,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L171",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -3373,7 +3548,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L139",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -3385,7 +3560,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L127",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -3397,7 +3572,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L127",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -3409,7 +3584,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L104",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -3421,7 +3596,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L104",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -3457,7 +3632,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L120",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -3469,7 +3644,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L123",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -3481,7 +3656,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L123",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -3509,6 +3684,54 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
+      "target": "src_poison202_to_vital_convert_convert",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
+      "target": "tests_test_converter_source",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L113",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
+      "target": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_converter.py",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_converter_mappingtests_test_unknown_and_unsupported_are_reported",
       "target": "src_poison202_to_vital_convert_convert",
       "relation": "calls",
@@ -3517,7 +3740,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L110",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -3529,7 +3752,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_converter.py",
-      "source_location": "L110",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -3745,7 +3968,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "tests/test_converter.py",
-      "source_location": "L135",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -4789,7 +5012,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4801,7 +5024,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4825,7 +5048,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L60",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -4861,7 +5084,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L365",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -4969,24 +5192,24 @@
     },
     {
       "source": "src_poison202_to_vital_convert",
-      "target": "src_poison202_to_vital_convert_conversion",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L11",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
       "source": "src_poison202_to_vital_convert",
-      "target": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L16",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -4997,7 +5220,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L365",
+      "source_location": "L407",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert",
+      "target": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert",
+      "target": "src_poison202_to_vital_convert_conversion",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert",
+      "target": "src_poison202_to_vital_convert_converter",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -5184,7 +5440,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L145",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
@@ -5387,145 +5643,13 @@
     },
     {
       "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_oscillators",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L100",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_filters",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L156",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_init",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_interactions",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L177",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_lfos",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L195",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_performance",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L240",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_warn",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L27",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_effects",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L294",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_read",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L32",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_run",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L348",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_set",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L47",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
-      "target": "src_poison202_to_vital_convert_converter_mod",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L58",
-      "weight": 1.0
-    },
-    {
-      "source": "src_poison202_to_vital_convert_converter",
       "target": "src_poison202_to_vital_convert_converter_envelope",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L73",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -5536,7 +5660,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L79",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -5547,7 +5671,139 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L84",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_oscillators",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L139",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_filters",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_interactions",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L219",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_lfos",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_performance",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L282",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_effects",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L336",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_run",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L390",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_init",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_warn",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_read",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_set",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_converter",
+      "target": "src_poison202_to_vital_convert_converter_mod",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -5558,7 +5814,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L28",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -5569,7 +5825,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L53",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -5580,7 +5836,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L56",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -5591,7 +5847,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/profile.py",
-      "source_location": "L60",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -5602,7 +5858,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L146",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -5613,7 +5869,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L153",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -5624,7 +5880,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L157",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -5635,7 +5891,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L169",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -5646,7 +5902,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L181",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -5657,7 +5913,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L189",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -5668,12 +5924,12 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L197",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
       "source": "tests_test_converter_mappingtests",
-      "target": "tests_test_converter_mappingtests_test_effect_bypass_and_random_lfo",
+      "target": "tests_test_converter_mappingtests_test_supersaw_uses_fitted_mix_and_detune_curves",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -5684,13 +5940,24 @@
     },
     {
       "source": "tests_test_converter_mappingtests",
+      "target": "tests_test_converter_mappingtests_test_effect_bypass_and_random_lfo",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_converter.py",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_converter_mappingtests",
       "target": "tests_test_converter_mappingtests_test_unknown_and_unsupported_are_reported",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L109",
+      "source_location": "L124",
       "weight": 1.0
     },
     {
@@ -5701,7 +5968,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L116",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -5712,7 +5979,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L125",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -5723,7 +5990,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_converter.py",
-      "source_location": "L136",
+      "source_location": "L152",
       "weight": 1.0
     },
     {
@@ -5834,6 +6101,39 @@
       "confidence_score": 1.0,
       "source_file": "src/poison202_to_vital/convert.py",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_rationale_11",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_rationale_29",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "src_poison202_to_vital_convert_rationale_43",
+      "target": "src_poison202_to_vital_convert_supersaw_outer_cents",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/poison202_to_vital/convert.py",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -5966,7 +6266,7 @@
       "confidence_score": 0.95,
       "context": "parameter_type",
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L365",
+      "source_location": "L407",
       "weight": 0.8
     },
     {
@@ -5977,7 +6277,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17",
+      "source_location": "L56",
       "weight": 0.8
     },
     {
@@ -5988,7 +6288,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "src/poison202_to_vital/convert.py",
-      "source_location": "L17",
+      "source_location": "L56",
       "weight": 0.8
     },
     {
@@ -5999,7 +6299,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "tests/test_converter.py",
-      "source_location": "L120",
+      "source_location": "L136",
       "weight": 0.8
     },
     {
@@ -6213,6 +6513,36 @@
       "weight": 1.0
     },
     {
+      "source": "docs_mapping_fitted_supersaw_control_law",
+      "target": "src_poison202_to_vital_convert_supersaw_blend",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_fitted_supersaw_control_law",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_zero_detune_policy",
+      "target": "src_poison202_to_vital_convert_supersaw_detune_curve",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
       "source": "docs_controlled_waveform_review_controlled_waveform_comparison",
       "target": "docs_controlled_waveform_review_output_level_difference",
       "relation": "references",
@@ -6230,6 +6560,16 @@
       "confidence_score": 1.0,
       "source_file": "docs/controlled-waveform-review.md",
       "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_controlled_waveform_review_revised_supersaw_mapping",
+      "target": "docs_mapping_fitted_supersaw_control_law",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/controlled-waveform-review.md",
+      "source_location": "Super Saw analysis update",
       "weight": 1.0
     },
     {
@@ -6652,6 +6992,20 @@
       "source_file": "docs/format.md"
     },
     {
+      "id": "supersaw_fitted_mapping",
+      "label": "Fitted Super Saw control mapping",
+      "nodes": [
+        "docs_mapping_fitted_supersaw_control_law",
+        "src_poison202_to_vital_convert_supersaw_blend",
+        "src_poison202_to_vital_convert_supersaw_detune_curve",
+        "src_poison202_to_vital_convert_supersaw_outer_cents"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/mapping.md"
+    },
+    {
       "id": "docs_mapping_calibration_evidence_gap",
       "label": "Unmeasured Poison mappings need calibration",
       "nodes": [
@@ -6666,5 +7020,5 @@
       "source_file": "docs/mapping.md"
     }
   ],
-  "built_at_commit": "81d11cc1a921efadc3060e1ca729a77d6c9f9c11"
+  "built_at_commit": "2f52fca65653a26a03d4c8945f4a915c19dd4d68"
 }

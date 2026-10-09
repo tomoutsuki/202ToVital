@@ -7,8 +7,10 @@ Requires Python 3.10+; conversion uses the standard library only.
 **This is an experimental, uncalibrated converter.** Binary decoding is verified
 against the supplied single preset and 47-preset bank. Vital output is checked
 against its source and exercised with Vita. Five controlled Poison recordings
-support a close steady harmonic match for the basic waveforms at matched pitch,
-but Super Saw differs and broader perceptual fidelity remains unverified.
+support a close steady harmonic match for the basic waveforms at matched pitch.
+Super Saw now uses a fitted nonlinear MIX/DETUNE mapping, but its oscillator
+waveform, phase and voice layout remain approximate and broader perceptual
+fidelity is unverified.
 Each conversion writes a report explaining assumptions, unsupported features,
 raw parameters, and any clipping. Read it before evaluating the result.
 
@@ -52,8 +54,10 @@ and the Vital preset comments.
 The profile exposes envelope timing/exponent, cutoff bounds, fine tuning,
 pitch/filter modulation depths, LFO rate bounds, portamento, EQ gain, output
 headroom (`output_gain_db`, default -18 dB), and
-waveform/filter/LFO enum order. Defaults are explicit hypotheses. Numeric mapping
-curves do not become measurements merely because they are configurable.
+waveform/filter/LFO enum order and Super Saw Vital detune range/power. Defaults
+are explicit hypotheses except where controlled experiments are cited in the
+mapping notes. Numeric mapping curves do not become measurements merely because
+they are configurable.
 See [mapping notes](docs/mapping.md) and [format evidence](docs/format.md).
 
 ## Validation
