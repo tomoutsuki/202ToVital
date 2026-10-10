@@ -62,6 +62,11 @@ to use the isolated-patch asymmetric Super Saw topology. Defaults
 are explicit hypotheses except where controlled experiments are cited in the
 mapping notes. Numeric mapping curves do not become measurements merely because
 they are configurable.
+
+`supersaw_octave_layer` is an off-by-default diagnostic profile option for the
+isolated Super Saw reconstruction. It adds a phase-reset octave sine on Vital
+OSC3 to test the measured center-harmonic imbalance; it is not a measured
+Poison waveform model.
 See [mapping notes](docs/mapping.md) and [format evidence](docs/format.md).
 
 ## Validation

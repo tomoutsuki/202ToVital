@@ -35,6 +35,15 @@ auxiliary voices. The controlled recordings still show an unresolved
 MIX-dependent harmonic difference, waveform/phase uncertainty, and level gap;
 this change corrects pitch-cluster placement only.
 
+The profile's `supersaw_octave_layer` is disabled by default. When explicitly
+enabled for an eligible reconstruction with no sub oscillator, it reserves Vital
+OSC3 for a phase-reset sine at OSC1 +12 semitones and routes it through ENV2 and
+filter 1. Its provisional center/side scales (0.45/1.66) and 3.89 target
+second-to-first center-harmonic ratio are derived from the full-MIX/full-DETUNE
+comparison, not reverse-engineered Poison internals. The layer is a diagnostic
+additive oscillator, not a custom Poison wavetable, and must be rendered and
+measured before it can become a default conversion behavior.
+
 Vital's serialized `unison_detune` uses quadratic scaling: physical outer spread
 is `detune_range * unison_detune**2`. The converter therefore writes
 `sqrt(outer_cents / detune_range)`, including for the auxiliary group. Fine tuning

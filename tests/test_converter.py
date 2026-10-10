@@ -154,6 +154,22 @@ class MappingTests(unittest.TestCase):
         self.assertAlmostEqual(modulation_amount(full, 'osc_2_level'), math.sqrt(side_gain))
         self.assertGreater(modulation_amount(full, 'osc_2_level'), .7)
 
+    def test_experimental_supersaw_octave_layer(self):
+        profile = Profile(supersaw_octave_layer=True)
+        settings = convert(source(O1TY=4, O1PW=1, O1PM=1), profile).preset['settings']
+        self.assertEqual(settings['osc_3_on'], 1)
+        self.assertEqual(settings['osc_3_transpose'], 12)
+        self.assertEqual(settings['osc_3_random_phase'], 0)
+        center_gain, side_gain = supersaw_gains(1)
+        self.assertAlmostEqual(settings['modulation_1_amount'], math.sqrt(center_gain * profile.supersaw_center_gain_scale))
+        self.assertAlmostEqual(settings['modulation_2_amount'], math.sqrt(side_gain * profile.supersaw_side_gain_scale))
+        octave_slot = next(i for i, item in enumerate(settings['modulations'], 1)
+                           if item == {'source': 'env_2', 'destination': 'osc_3_level'})
+        expected_octave_gain = center_gain * profile.supersaw_center_gain_scale * (profile.supersaw_center_second_harmonic_ratio - .5)
+        self.assertAlmostEqual(settings[f'modulation_{octave_slot}_amount'], math.sqrt(expected_octave_gain))
+        self.assertTrue(any(w['code'] == 'supersaw_octave_layer'
+                            for w in convert(source(O1TY=4, O1PW=1, O1PM=1), profile).report['warnings']))
+
     def test_supersaw_falls_back_when_second_oscillator_is_audible(self):
         settings = convert(source(O1TY=4, O1PW=1, O1PM=1, BLNC=0)).preset['settings']
         self.assertEqual(settings['osc_1_unison_voices'], 7)
@@ -179,7 +195,8 @@ class MappingTests(unittest.TestCase):
     def test_profile_validation(self):
         for values in [{'envelope_exponent': math.nan}, {'cutoff_max_hz': 10}, {'envelope_max_seconds': 40},
                        {'fine_tune_cents': 'wrong'}, {'supersaw_detune_range_cents': 49},
-                       {'supersaw_detune_power': 0}, {'supersaw_asymmetric_topology': 1}, {'lfo_rate_exponent': 0},
+                       {'supersaw_detune_power': 0}, {'supersaw_asymmetric_topology': 1},
+                       {'supersaw_octave_layer': 1}, {'supersaw_center_gain_scale': 0}, {'lfo_rate_exponent': 0},
                        {'waveform_order': ['sine']}]:
             with self.assertRaises(ValueError):
                 Profile(**values)

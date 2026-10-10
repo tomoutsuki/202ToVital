@@ -25,6 +25,10 @@ class Profile:
     supersaw_detune_range_cents: float = 20.0
     supersaw_detune_power: float = 0.95
     supersaw_asymmetric_topology: bool = True
+    supersaw_octave_layer: bool = False
+    supersaw_center_gain_scale: float = 0.45
+    supersaw_side_gain_scale: float = 1.66
+    supersaw_center_second_harmonic_ratio: float = 3.89
     waveform_order: tuple[str, ...] = ("saw", "pulse", "sine", "triangle", "supersaw")
     filter_order: tuple[str, ...] = ("off", "lp", "bp", "hp", "peak", "notch")
     lfo_order: tuple[str, ...] = ("triangle", "sine", "saw", "square", "trapezoid", "random")
@@ -36,9 +40,14 @@ class Profile:
             value = getattr(self, field.name)
             if field.name in ('name', 'waveform_order', 'filter_order', 'lfo_order'):
                 continue
-            if field.name == 'supersaw_asymmetric_topology':
+            if field.name in ('supersaw_asymmetric_topology', 'supersaw_octave_layer'):
                 if not isinstance(value, bool):
-                    raise ValueError('Profile supersaw_asymmetric_topology must be boolean')
+                    raise ValueError(f'Profile {field.name} must be boolean')
+                continue
+            if field.name in ('supersaw_center_gain_scale', 'supersaw_side_gain_scale',
+                              'supersaw_center_second_harmonic_ratio'):
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 8:
+                    raise ValueError(f'Profile {field.name} must be between 0 and 8')
                 continue
             if field.name == 'supersaw_detune_range_cents':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 48:

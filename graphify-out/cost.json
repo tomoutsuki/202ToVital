@@ -96,8 +96,14 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 18
+    },
+    {
+      "date": "2026-10-09T00:00:00+00:00",
+      "input_tokens": 3617,
+      "output_tokens": 2630,
+      "files": 18
     }
   ],
-  "total_input_tokens": 0,
-  "total_output_tokens": 0
+  "total_input_tokens": 3617,
+  "total_output_tokens": 2630
 }

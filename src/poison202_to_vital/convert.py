@@ -267,6 +267,9 @@ class Converter:
                 # Both reconstructed oscillators represent Poison OSC1.  OSC2's
                 # source MIX is muted and must not attenuate the auxiliary group.
                 center_gain, side_gain = supersaw_gains(supersaw_mix)
+                if p.supersaw_octave_layer:
+                    center_gain *= p.supersaw_center_gain_scale
+                    side_gain *= p.supersaw_side_gain_scale
                 topology_gain = center_gain if i == 1 else side_gain
                 self.set(prefix + '_level', 0)
                 self.mod('env_2', prefix + '_level', math.sqrt(topology_gain))
@@ -434,14 +437,30 @@ class Converter:
             self.warn('unsupported', 'Velocity/wheel XMOD destinations omitted because the phase slot is used by ring modulation.')
         sub = self.read('SMIX')
         serial = bool(self.settings.get('filter_2_filter_input'))
-        self.set('osc_3_on', int(sub > 0))
-        self.set('osc_3_level', math.sqrt(sub) if serial else 0)
-        if not serial:
-            self.mod('env_2', 'osc_3_level', math.sqrt(sub))
-        self.set('osc_3_transpose', -24 if self.read('STYP', discrete=True) else -12)
-        self.settings['wavetables'][2] = vital.wavetable('sine')
-        self.set('osc_3_destination', 0)
-        self.set('osc_3_stereo_spread', 0)
+        octave_layer = self.asymmetric_supersaw_aux and p.supersaw_octave_layer and sub == 0
+        if octave_layer:
+            center_gain, _ = supersaw_gains(self.read('O1PW'))
+            center_gain *= p.supersaw_center_gain_scale
+            octave_gain = min(1.0, center_gain * (p.supersaw_center_second_harmonic_ratio - .5))
+            self.set('osc_3_on', 1)
+            self.set('osc_3_level', 0)
+            self.mod('env_2', 'osc_3_level', math.sqrt(octave_gain))
+            self.set('osc_3_transpose', self.read('O1PI', lo=-24, hi=24, discrete=True) + 12)
+            self.set('osc_3_tune', self.read('O1TU', lo=-1) * p.fine_tune_cents / 100)
+            self.settings['wavetables'][2] = vital.wavetable('sine')
+            self.set('osc_3_destination', 0)
+            self.set('osc_3_stereo_spread', 0)
+            self.set('osc_3_random_phase', 0)
+            self.warn('supersaw_octave_layer', 'Experimental sine layer at OSC1 +12 semitones targets the measured center second-harmonic ratio. It is enabled only by profile, shares ENV2, and still needs isolated audio validation.')
+        else:
+            self.set('osc_3_on', int(sub > 0))
+            self.set('osc_3_level', math.sqrt(sub) if serial else 0)
+            if not serial:
+                self.mod('env_2', 'osc_3_level', math.sqrt(sub))
+            self.set('osc_3_transpose', -24 if self.read('STYP', discrete=True) else -12)
+            self.settings['wavetables'][2] = vital.wavetable('sine')
+            self.set('osc_3_destination', 0)
+            self.set('osc_3_stereo_spread', 0)
         noise = self.read('NMIX')
         self.set('sample_on', int(noise > 0))
         self.set('sample_level', math.sqrt(noise) if serial else 0)
