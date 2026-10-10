@@ -24,6 +24,7 @@ class Profile:
     output_gain_db: float = -18.0
     supersaw_detune_range_cents: float = 20.0
     supersaw_detune_power: float = 0.95
+    supersaw_asymmetric_topology: bool = True
     waveform_order: tuple[str, ...] = ("saw", "pulse", "sine", "triangle", "supersaw")
     filter_order: tuple[str, ...] = ("off", "lp", "bp", "hp", "peak", "notch")
     lfo_order: tuple[str, ...] = ("triangle", "sine", "saw", "square", "trapezoid", "random")
@@ -34,6 +35,10 @@ class Profile:
         for field in fields(self):
             value = getattr(self, field.name)
             if field.name in ('name', 'waveform_order', 'filter_order', 'lfo_order'):
+                continue
+            if field.name == 'supersaw_asymmetric_topology':
+                if not isinstance(value, bool):
+                    raise ValueError('Profile supersaw_asymmetric_topology must be boolean')
                 continue
             if field.name == 'supersaw_detune_range_cents':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 48:

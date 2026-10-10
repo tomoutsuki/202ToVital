@@ -8,9 +8,12 @@ Requires Python 3.10+; conversion uses the standard library only.
 against the supplied single preset and 47-preset bank. Vital output is checked
 against its source and exercised with Vita. Five controlled Poison recordings
 support a close steady harmonic match for the basic waveforms at matched pitch.
-Super Saw now uses a fitted nonlinear MIX/DETUNE mapping, but its oscillator
-waveform, phase and voice layout remain approximate and broader perceptual
-fidelity is unverified.
+For isolated, single-oscillator Super Saw patches, the default conversion uses
+Vital OSC1 plus a five-voice OSC2 auxiliary group to match the six measured pitch
+clusters without the previous extra low unison voice. Patches that use Poison
+OSC2 or oscillator interactions retain the symmetric-unison fallback. Super Saw
+waveform, phase, MIX-dependent harmonic balance, output level and broader
+perceptual fidelity remain unverified.
 Each conversion writes a report explaining assumptions, unsupported features,
 raw parameters, and any clipping. Read it before evaluating the result.
 
@@ -54,7 +57,8 @@ and the Vital preset comments.
 The profile exposes envelope timing/exponent, cutoff bounds, fine tuning,
 pitch/filter modulation depths, LFO rate bounds and exponent, portamento, EQ gain, output
 headroom (`output_gain_db`, default -18 dB), and
-waveform/filter/LFO enum order and Super Saw Vital detune range/power. Defaults
+waveform/filter/LFO enum order, Super Saw Vital detune range/power, and whether
+to use the isolated-patch asymmetric Super Saw topology. Defaults
 are explicit hypotheses except where controlled experiments are cited in the
 mapping notes. Numeric mapping curves do not become measurements merely because
 they are configurable.

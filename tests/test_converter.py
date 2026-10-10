@@ -11,7 +11,8 @@ import zipfile
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
 from poison202_to_vital.convert import (convert, lfo_free_rate_hz, supersaw_blend,
-                                         supersaw_outer_cents, vital_unison_detune_value)
+                                         supersaw_auxiliary_topology, supersaw_outer_cents,
+                                         vital_unison_detune_value)
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -123,18 +124,32 @@ class MappingTests(unittest.TestCase):
         middle = convert(source(O1TY=4, O1PW=.5, O1PM=.5)).preset['settings']
         full = convert(source(O1TY=4, O1PW=1, O1PM=1)).preset['settings']
 
-        self.assertEqual(zero['osc_1_unison_voices'], 7)
-        self.assertAlmostEqual(zero['osc_1_unison_blend'], 0.036917, places=5)
-        self.assertEqual(zero['osc_1_unison_detune'], 0)
-        self.assertEqual(zero['osc_1_detune_range'], 20)
-        self.assertEqual(zero['osc_1_detune_power'], .95)
+        self.assertEqual(zero['osc_1_unison_voices'], 1)
         self.assertEqual(zero['osc_1_random_phase'], 1)
-        self.assertAlmostEqual(middle['osc_1_unison_blend'], supersaw_blend(.5))
-        self.assertAlmostEqual(middle['osc_1_unison_detune'], vital_unison_detune_value(supersaw_outer_cents(.5), 20))
-        self.assertAlmostEqual(middle['osc_1_unison_detune'] ** 2 * 20, supersaw_outer_cents(.5))
-        self.assertAlmostEqual(full['osc_1_unison_blend'], 0.919709, places=5)
-        self.assertAlmostEqual(full['osc_1_unison_detune'], 2.972, places=3)
-        self.assertAlmostEqual(full['osc_1_unison_detune'] ** 2 * 20, 176.686, places=3)
+        for settings, detune in [(zero, 0), (middle, .5), (full, 1)]:
+            center, outer, power = supersaw_auxiliary_topology(detune)
+            self.assertEqual(settings['osc_2_unison_voices'], 5)
+            self.assertAlmostEqual(settings['osc_2_tune'] * 100, center, places=3)
+            self.assertAlmostEqual(settings['osc_2_unison_detune'] ** 2 * 20, outer, places=3)
+            self.assertAlmostEqual(settings['osc_2_detune_power'], power, places=4)
+            self.assertEqual(settings['osc_2_destination'], 0)
+
+        # A five-voice Vital group is its center and two symmetric pairs.
+        # With OSC1's zero-cent voice, this reproduces the six measured
+        # full-DETUNE clusters without the prior low extra voice.
+        center, outer, power = supersaw_auxiliary_topology(1)
+        inner = outer * ((math.exp(.5 * power) - 1) / (math.exp(power) - 1))
+        self.assertAlmostEqual(center - outer, -110.879, places=2)
+        self.assertAlmostEqual(center - inner, -35.631, places=2)
+        self.assertAlmostEqual(center + inner, 102.843, places=2)
+        self.assertAlmostEqual(center + outer, 178.091, places=2)
+
+    def test_supersaw_falls_back_when_second_oscillator_is_audible(self):
+        settings = convert(source(O1TY=4, O1PW=1, O1PM=1, BLNC=0)).preset['settings']
+        self.assertEqual(settings['osc_1_unison_voices'], 7)
+        self.assertAlmostEqual(settings['osc_1_unison_blend'], supersaw_blend(1), places=5)
+        self.assertAlmostEqual(settings['osc_1_unison_detune'] ** 2 * 20, supersaw_outer_cents(1), places=3)
+        self.assertEqual(settings['osc_2_destination'], 1)
 
     def test_effect_bypass_and_random_lfo(self):
         settings = convert(source(FXON=0, FX1S=1, FX1L=1, L1TY=5, **{'L1>F': .2})).preset['settings']
@@ -154,7 +169,7 @@ class MappingTests(unittest.TestCase):
     def test_profile_validation(self):
         for values in [{'envelope_exponent': math.nan}, {'cutoff_max_hz': 10}, {'envelope_max_seconds': 40},
                        {'fine_tune_cents': 'wrong'}, {'supersaw_detune_range_cents': 49},
-                       {'supersaw_detune_power': 0}, {'lfo_rate_exponent': 0},
+                       {'supersaw_detune_power': 0}, {'supersaw_asymmetric_topology': 1}, {'lfo_rate_exponent': 0},
                        {'waveform_order': ['sine']}]:
             with self.assertRaises(ValueError):
                 Profile(**values)

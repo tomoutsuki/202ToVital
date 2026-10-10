@@ -11,21 +11,34 @@ Do not label these mappings acoustically verified.
 `O1TY`/`O2TY` are provisionally ordered saw, pulse, sine, triangle, supersaw.
 Wave Source assets are generated from analytic waveforms, with no external table
 files. Pulse width assumes normalized PW maps 50%..99% duty. A controlled
-Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model: MIX maps through
-the fitted center/side gain ratio into Vital Blend, while DETUNE maps through the
-JP-style nonlinear detune curve to the measured outer-voice cents. The converter
-uses seven Vital voices, a 20-cent Vital detune range, detune power 0.95, and
-random oscillator phase. It clamps the fitted curve to zero at Poison DETUNE=0
-because a nonzero floor was not established. The latest sustained full-detune
-recording resolves six strong frequency clusters and no strong lowest JP side
-voice. It does not establish Poison's physical voice count, so Vital's symmetric
-seven-voice unison remains a deliberate approximation; random phase and detune
-power 0.95 need repeated-trigger validation. The underlying waveform also remains
-unverified. Vital's serialized `unison_detune` uses quadratic scaling: physical
-outer spread is `detune_range * unison_detune**2`. The converter therefore writes
-`sqrt(outer_cents / detune_range)` so its 176.7-cent full-detune target is not
-mistakenly squared into a roughly 1561-cent spread. Fine tuning assumes +/-100
-cents; tune range is configurable.
+Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model. For an isolated
+OSC1 Super Saw in parallel routing with `BLNC=-1`, no OSC interactions, and the
+default `supersaw_asymmetric_topology` profile setting, the converter reserves
+Vital OSC1 for the observed zero-cent cluster and repurposes the muted Poison OSC2
+as a five-voice auxiliary group through filter 1. At full DETUNE, the auxiliary
+group is centered at +33.6 cents with symmetric +/-69.2 and +/-144.5-cent pairs.
+Together with OSC1 this yields approximately -110.9, -35.6, 0, +33.6, +102.8,
+and +178.1 cents: within about 1.5 cents of the six resolved Poison clusters in
+the controlled recording, and without the prior extra low Vital voice. Center and
+per-side fitted MIX gains set the two oscillator levels; the auxiliary unison uses
+a fixed blend that equalizes its five voices. Center shift and pair spacing scale
+with the existing nonlinear DETUNE curve. This is a reconstruction of measured
+output positions, not evidence of Poison's internal oscillator architecture.
+
+Other Super Saw patches fall back to seven-voice symmetric Vital unison with a
+20-cent detune range, detune power 0.95, fitted Blend, and random oscillator
+phase. The fallback also applies when Poison OSC2 is audible, serial routing or
+OSC interaction is active, or the profile disables the reconstruction. The
+topology deliberately omits LFO2 and `MPI2` destinations in the reconstruction,
+because they targeted the muted Poison OSC2 branch and must not animate the new
+auxiliary voices. The controlled recordings still show an unresolved
+MIX-dependent harmonic difference, waveform/phase uncertainty, and level gap;
+this change corrects pitch-cluster placement only.
+
+Vital's serialized `unison_detune` uses quadratic scaling: physical outer spread
+is `detune_range * unison_detune**2`. The converter therefore writes
+`sqrt(outer_cents / detune_range)`, including for the auxiliary group. Fine tuning
+assumes +/-100 cents; tune range is configurable.
 
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs
