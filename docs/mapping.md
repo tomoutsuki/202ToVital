@@ -21,7 +21,11 @@ recording resolves six strong frequency clusters and no strong lowest JP side
 voice. It does not establish Poison's physical voice count, so Vital's symmetric
 seven-voice unison remains a deliberate approximation; random phase and detune
 power 0.95 need repeated-trigger validation. The underlying waveform also remains
-unverified. Fine tuning assumes +/-100 cents; tune range is configurable.
+unverified. Vital's serialized `unison_detune` uses quadratic scaling: physical
+outer spread is `detune_range * unison_detune**2`. The converter therefore writes
+`sqrt(outer_cents / detune_range)` so its 176.7-cent full-detune target is not
+mistakenly squared into a roughly 1561-cent spread. Fine tuning assumes +/-100
+cents; tune range is configurable.
 
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs

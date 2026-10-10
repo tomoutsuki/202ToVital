@@ -46,6 +46,16 @@ def supersaw_outer_cents(value: float) -> float:
     return 1200.0 * math.log2(1.0 + 0.10745242 * supersaw_detune_curve(value))
 
 
+def vital_unison_detune_value(outer_cents: float, detune_range_cents: float) -> float:
+    """Serialize Vital's quadratically scaled unison-detune control.
+
+    Vital computes physical outer spread as
+    ``detune_range * unison_detune**2``. The preset value therefore needs the
+    square root of the desired cents ratio, rather than the ratio itself.
+    """
+    return math.sqrt(max(0.0, outer_cents / detune_range_cents))
+
+
 def lfo_free_rate_hz(value: float, profile: Profile) -> float:
     """Approximate Poison's measured free-running LFO RATE response.
 
@@ -169,7 +179,7 @@ class Converter:
                 self.set(prefix + '_detune_range', p.supersaw_detune_range_cents)
                 self.set(prefix + '_detune_power', p.supersaw_detune_power)
                 outer_cents = supersaw_outer_cents(pwm)
-                self.set(prefix + '_unison_detune', outer_cents / p.supersaw_detune_range_cents)
+                self.set(prefix + '_unison_detune', vital_unison_detune_value(outer_cents, p.supersaw_detune_range_cents))
                 self.set(prefix + '_random_phase', 1)
                 self.warn('supersaw', 'Seven-voice Vital unison uses fitted nonlinear Poison MIX and DETUNE curves, detune power 0.95, and random phase. Poison exposes six strong full-detune pitch clusters, including no strong lowest JP side voice; Vital symmetric unison and the underlying waveform remain approximate.')
             elif shape == 'pulse' and pwm:

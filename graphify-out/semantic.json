@@ -944,6 +944,78 @@
       "author": null,
       "contributor": null,
       "rationale": "The sustained full-detune recording does not establish Poison physical voice count."
+    },
+    {
+      "id": "docs_mapping_vital_unison_detune",
+      "label": "Vital unison_detune",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Vital's serialized unison_detune parameter uses quadratic scaling."
+    },
+    {
+      "id": "docs_mapping_quadratic_serialization_rule",
+      "label": "Quadratic Serialization Rule",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Physical outer spread equals detune_range multiplied by unison_detune squared."
+    },
+    {
+      "id": "docs_mapping_physical_outer_spread",
+      "label": "Physical Outer Spread",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Physical outer spread is detune_range * unison_detune**2."
+    },
+    {
+      "id": "docs_mapping_square_root_conversion",
+      "label": "Square-Root Detune Conversion",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The converter writes sqrt(outer_cents / detune_range) to compensate for Vital quadratic serialized scaling."
+    },
+    {
+      "id": "docs_mapping_target_outer_spread_176_7_cents",
+      "label": "176.7-Cent Full-Detune Target Outer Spread",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The square-root conversion preserves the 176.7-cent full-detune target."
+    },
+    {
+      "id": "docs_mapping_accidental_excessive_spread_1561_cents",
+      "label": "Accidental Approximately 1561-Cent Spread",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Without square-root conversion, the target is squared into a roughly 1561-cent spread."
     }
   ],
   "edges": [
@@ -1840,6 +1912,66 @@
     {
       "source": "docs_mapping_poison_physical_voice_count",
       "target": "docs_mapping_seven_vital_voices",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_mapping_decisions",
+      "target": "docs_mapping_vital_unison_detune",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_vital_unison_detune",
+      "target": "docs_mapping_quadratic_serialization_rule",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_quadratic_serialization_rule",
+      "target": "docs_mapping_physical_outer_spread",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_square_root_conversion",
+      "target": "docs_mapping_quadratic_serialization_rule",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_square_root_conversion",
+      "target": "docs_mapping_target_outer_spread_176_7_cents",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_square_root_conversion",
+      "target": "docs_mapping_accidental_excessive_spread_1561_cents",
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,

@@ -10,7 +10,8 @@ import zipfile
 
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
-from poison202_to_vital.convert import convert, lfo_free_rate_hz, supersaw_blend, supersaw_outer_cents
+from poison202_to_vital.convert import (convert, lfo_free_rate_hz, supersaw_blend,
+                                         supersaw_outer_cents, vital_unison_detune_value)
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -129,9 +130,11 @@ class MappingTests(unittest.TestCase):
         self.assertEqual(zero['osc_1_detune_power'], .95)
         self.assertEqual(zero['osc_1_random_phase'], 1)
         self.assertAlmostEqual(middle['osc_1_unison_blend'], supersaw_blend(.5))
-        self.assertAlmostEqual(middle['osc_1_unison_detune'] * 20, supersaw_outer_cents(.5))
+        self.assertAlmostEqual(middle['osc_1_unison_detune'], vital_unison_detune_value(supersaw_outer_cents(.5), 20))
+        self.assertAlmostEqual(middle['osc_1_unison_detune'] ** 2 * 20, supersaw_outer_cents(.5))
         self.assertAlmostEqual(full['osc_1_unison_blend'], 0.919709, places=5)
-        self.assertAlmostEqual(full['osc_1_unison_detune'] * 20, 176.686, places=3)
+        self.assertAlmostEqual(full['osc_1_unison_detune'], 2.972, places=3)
+        self.assertAlmostEqual(full['osc_1_unison_detune'] ** 2 * 20, 176.686, places=3)
 
     def test_effect_bypass_and_random_lfo(self):
         settings = convert(source(FXON=0, FX1S=1, FX1L=1, L1TY=5, **{'L1>F': .2})).preset['settings']
