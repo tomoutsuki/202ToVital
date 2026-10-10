@@ -14,12 +14,14 @@ files. Pulse width assumes normalized PW maps 50%..99% duty. A controlled
 Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model: MIX maps through
 the fitted center/side gain ratio into Vital Blend, while DETUNE maps through the
 JP-style nonlinear detune curve to the measured outer-voice cents. The converter
-uses seven Vital voices, a 20-cent Vital detune range and detune power 1.0.
-It clamps the fitted curve to zero at Poison DETUNE=0 because a nonzero floor was
-not established. The source voice layout, phase behavior and waveform remain
-unverified, so this is a better parameter-layer approximation rather than a
-complete Super Saw reconstruction. Fine tuning assumes +/-100 cents; tune range
-is configurable.
+uses seven Vital voices, a 20-cent Vital detune range, detune power 0.95, and
+random oscillator phase. It clamps the fitted curve to zero at Poison DETUNE=0
+because a nonzero floor was not established. The latest sustained full-detune
+recording resolves six strong frequency clusters and no strong lowest JP side
+voice. It does not establish Poison's physical voice count, so Vital's symmetric
+seven-voice unison remains a deliberate approximation; random phase and detune
+power 0.95 need repeated-trigger validation. The underlying waveform also remains
+unverified. Fine tuning assumes +/-100 cents; tune range is configurable.
 
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs

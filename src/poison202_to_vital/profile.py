@@ -23,7 +23,7 @@ class Profile:
     portamento_max_seconds: float = 2.0
     output_gain_db: float = -18.0
     supersaw_detune_range_cents: float = 20.0
-    supersaw_detune_power: float = 1.0
+    supersaw_detune_power: float = 0.95
     waveform_order: tuple[str, ...] = ("saw", "pulse", "sine", "triangle", "supersaw")
     filter_order: tuple[str, ...] = ("off", "lp", "bp", "hp", "peak", "notch")
     lfo_order: tuple[str, ...] = ("triangle", "sine", "saw", "square", "trapezoid", "random")

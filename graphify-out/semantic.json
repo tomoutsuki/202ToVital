@@ -793,6 +793,157 @@
       "captured_at": null,
       "author": null,
       "contributor": null
+    },
+    {
+      "id": "docs_mapping_supersaw_vital_strategy",
+      "label": "Super Saw Vital Strategy",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A controlled Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model implemented with Vital parameters."
+    },
+    {
+      "id": "docs_mapping_mix_mapping",
+      "label": "Nonlinear MIX Mapping",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "MIX maps through the fitted center/side gain ratio into Vital Blend."
+    },
+    {
+      "id": "docs_mapping_vital_blend",
+      "label": "Vital Blend",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_detune_mapping",
+      "label": "Nonlinear DETUNE Mapping",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "DETUNE maps through a JP-style nonlinear curve to measured outer-voice cents and is clamped to zero at Poison DETUNE=0."
+    },
+    {
+      "id": "docs_mapping_measured_outer_voice_cents",
+      "label": "Measured Outer-Voice Cents",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_seven_vital_voices",
+      "label": "Seven Vital Voices",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Vital symmetric seven-voice unison remains deliberate because Poison physical voice count is not established."
+    },
+    {
+      "id": "docs_mapping_vital_detune_range_20_cents",
+      "label": "20-Cent Vital Detune Range",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_detune_power_095",
+      "label": "Detune Power 0.95",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Requires repeated-trigger validation."
+    },
+    {
+      "id": "docs_mapping_random_oscillator_phase",
+      "label": "Random Oscillator Phase",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Requires repeated-trigger validation."
+    },
+    {
+      "id": "docs_mapping_full_detune_recording",
+      "label": "Sustained Full-Detune Recording",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_six_frequency_clusters",
+      "label": "Six Strong Frequency Clusters",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mapping_missing_lowest_jp_side_voice",
+      "label": "Missing Lowest JP Side Voice",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The recording resolves no strong lowest JP side voice."
+    },
+    {
+      "id": "docs_mapping_poison_physical_voice_count",
+      "label": "Poison Physical Voice Count",
+      "file_type": "concept",
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The sustained full-detune recording does not establish Poison physical voice count."
     }
   ],
   "edges": [
@@ -1574,6 +1725,126 @@
       "confidence_score": 1.0,
       "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
       "source_location": "## Filters and timing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_mix_mapping",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_mix_mapping",
+      "target": "docs_mapping_vital_blend",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_detune_mapping",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_detune_mapping",
+      "target": "docs_mapping_measured_outer_voice_cents",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_seven_vital_voices",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_vital_detune_range_20_cents",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_detune_power_095",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_supersaw_vital_strategy",
+      "target": "docs_mapping_random_oscillator_phase",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_full_detune_recording",
+      "target": "docs_mapping_six_frequency_clusters",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_full_detune_recording",
+      "target": "docs_mapping_missing_lowest_jp_side_voice",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_full_detune_recording",
+      "target": "docs_mapping_poison_physical_voice_count",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mapping_poison_physical_voice_count",
+      "target": "docs_mapping_seven_vital_voices",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "/home/tomas/202ToVital/202ToVital/docs/mapping.md",
+      "source_location": "Oscillators, envelopes and routing",
       "weight": 1.0
     }
   ],

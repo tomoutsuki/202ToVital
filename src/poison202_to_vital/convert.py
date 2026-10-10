@@ -170,7 +170,8 @@ class Converter:
                 self.set(prefix + '_detune_power', p.supersaw_detune_power)
                 outer_cents = supersaw_outer_cents(pwm)
                 self.set(prefix + '_unison_detune', outer_cents / p.supersaw_detune_range_cents)
-                self.warn('supersaw', 'Seven-voice Vital unison uses fitted nonlinear Poison MIX and DETUNE curves. Voice layout, phase behavior and the underlying waveform remain approximate.')
+                self.set(prefix + '_random_phase', 1)
+                self.warn('supersaw', 'Seven-voice Vital unison uses fitted nonlinear Poison MIX and DETUNE curves, detune power 0.95, and random phase. Poison exposes six strong full-detune pitch clusters, including no strong lowest JP side voice; Vital symmetric unison and the underlying waveform remain approximate.')
             elif shape == 'pulse' and pwm:
                 self.warn('unsupported', f'{tag}PM: dynamic PWM routing is unknown; static pulse width is retained.')
             # Parallel TVA is approximated before each filter. Serial TVA1 remains
