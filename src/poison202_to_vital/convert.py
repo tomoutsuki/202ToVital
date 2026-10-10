@@ -196,6 +196,7 @@ class Converter:
         balance = self.read('BLNC', lo=-1)
         levels = [(.5 * (1 - balance)) ** .5, (.5 * (1 + balance)) ** .5]
         osc1_shape = p.waveform_order[int(self.read('O1TY', hi=4, discrete=True))]
+        supersaw_mix = self.read('O1PW')
         detune = self.read('O1PM')
         interaction_active = any(abs(self.source.parameters.get(tag, 0)) > 1e-12
                                  for tag in ('XMOD', 'RING', 'SYNC', 'MXFM', 'VELX'))
@@ -263,7 +264,9 @@ class Converter:
             # Parallel TVA is approximated before each filter. Serial TVA1 remains
             # the main post-filter envelope; TVA2 modulates OSC2 before the sum.
             if self.asymmetric_supersaw_aux:
-                center_gain, side_gain = supersaw_gains(width)
+                # Both reconstructed oscillators represent Poison OSC1.  OSC2's
+                # source MIX is muted and must not attenuate the auxiliary group.
+                center_gain, side_gain = supersaw_gains(supersaw_mix)
                 topology_gain = center_gain if i == 1 else side_gain
                 self.set(prefix + '_level', 0)
                 self.mod('env_2', prefix + '_level', math.sqrt(topology_gain))

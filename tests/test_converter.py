@@ -10,7 +10,7 @@ import zipfile
 
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
-from poison202_to_vital.convert import (convert, lfo_free_rate_hz, supersaw_blend,
+from poison202_to_vital.convert import (convert, lfo_free_rate_hz, supersaw_blend, supersaw_gains,
                                          supersaw_auxiliary_topology, supersaw_outer_cents,
                                          vital_unison_detune_value)
 from poison202_to_vital.profile import Profile
@@ -143,6 +143,16 @@ class MappingTests(unittest.TestCase):
         self.assertAlmostEqual(center - inner, -35.631, places=2)
         self.assertAlmostEqual(center + inner, 102.843, places=2)
         self.assertAlmostEqual(center + outer, 178.091, places=2)
+
+        def modulation_amount(settings, destination):
+            index = next(i for i, item in enumerate(settings['modulations'], 1)
+                         if item == {'source': 'env_2', 'destination': destination})
+            return settings[f'modulation_{index}_amount']
+
+        center_gain, side_gain = supersaw_gains(1)
+        self.assertAlmostEqual(modulation_amount(full, 'osc_1_level'), math.sqrt(center_gain))
+        self.assertAlmostEqual(modulation_amount(full, 'osc_2_level'), math.sqrt(side_gain))
+        self.assertGreater(modulation_amount(full, 'osc_2_level'), .7)
 
     def test_supersaw_falls_back_when_second_oscillator_is_audible(self):
         settings = convert(source(O1TY=4, O1PW=1, O1PM=1, BLNC=0)).preset['settings']
