@@ -6,6 +6,7 @@ import sys
 
 from . import __version__, poison, vital
 from .convert import convert, lfo_free_rate_hz, lfo_pitch_semitones
+from .poison_schema import P202_TAG_TO_FACTORY_KEY
 from .profile import Profile
 
 
@@ -43,7 +44,8 @@ def parameter_group(tag: str) -> str:
 
 def decoded_parameter(tag: str, value: float, profile: Profile) -> dict:
     """Add conservative UI/MIDI interpretations without replacing raw float32."""
-    item = {'tag': tag, 'value': value, 'group': parameter_group(tag),
+    item = {'tag': tag, 'factory_key': P202_TAG_TO_FACTORY_KEY.get(tag),
+            'value': value, 'group': parameter_group(tag),
             'description': 'Tagged float32 parameter; interpretation is not verified'}
     if len(tag) == 4 and tag[0] == 'L' and tag[1] in '12':
         number = tag[1]
@@ -87,6 +89,7 @@ def preset_inspection(preset, profile: Profile) -> dict:
         'record_size': preset.record_size,
         'record_end_offset': preset.offset + preset.record_size,
         'raw_name_hex': preset.raw_name.hex(),
+        'source_slot': preset.source_slot,
         'parameter_count': len(preset.parameters),
         'parameters': dict(preset.parameters),
         'decoded_parameters': [decoded_parameter(tag, value, profile)
@@ -104,6 +107,7 @@ def print_inspection(path: Path, bank, selected, profile: Profile, detailed: boo
         print(f'\nPreset {preset.index}: {preset.name}')
         print(f'  Record: offset {preset.offset}, size {preset.record_size}, end {preset.offset + preset.record_size}')
         print(f'  Raw name: {preset.raw_name.hex()}')
+        print(f'  Source slot: {preset.source_slot}')
         print(f'  Parameters: {len(preset.parameters)}')
         if not detailed:
             continue
@@ -132,7 +136,8 @@ def print_inspection(path: Path, bank, selected, profile: Profile, detailed: boo
                 if 'pitch_semitones' in mapped:
                     annotations.append(f'pitch≈{mapped["pitch_semitones"]:+.6g} st')
                 extra = f' | {"; ".join(annotations)}' if annotations else ''
-                print(f'    {item["tag"]} = {item["value"]:.9g}{extra} | {item["description"]}')
+                factory = f' / {item["factory_key"]}' if item['factory_key'] else ''
+                print(f'    {item["tag"]}{factory} = {item["value"]:.9g}{extra} | {item["description"]}')
 
 
 def parser() -> argparse.ArgumentParser:

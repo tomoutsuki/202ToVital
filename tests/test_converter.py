@@ -17,6 +17,10 @@ from poison202_to_vital.convert import (convert, lfo_free_rate_hz, lfo_pitch_sem
                                          supersaw_outer_cents,
                                          vital_unison_detune_value,
                                          xmod_effective_depth, xmod_vital_amount)
+from poison202_to_vital.poison_schema import (FACTORY_ONLY_PARAMETER_KEYS,
+                                               FACTORY_PRESET_COUNT,
+                                               P202_PARAMETER_COUNT,
+                                               P202_TAG_TO_FACTORY_KEY)
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -24,8 +28,10 @@ MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
 
 def encode(records):
     bodies = []
-    for name, parameters in records:
-        body = name.encode()[:12].ljust(16, b'\0')
+    for default_slot, record in enumerate(records):
+        name, parameters, *explicit_slot = record
+        slot = explicit_slot[0] if explicit_slot else default_slot
+        body = name.encode()[:15].ljust(15, b'\0') + bytes([slot])
         body += b''.join(tag.encode() + struct.pack('<f', value) for tag, value in parameters)
         bodies.append(body + b'####')
     start = 16 + len(records) * 4
@@ -51,11 +57,20 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(bank.presets[1].parameters['O1PI'], 24)
         self.assertEqual(bank.presets[0].parameters['O1PI'], -12)
         self.assertEqual(bank.presets[0].record_size, bank.presets[1].offset - bank.presets[0].offset)
+        self.assertEqual([preset.source_slot for preset in bank.presets], [0, 1])
 
     def test_nonzero_name_padding_is_not_text(self):
         raw = bytearray(encode([('Name', [('GAIN', 1)])]))
-        raw[35] = 38
-        self.assertEqual(poison.parse(raw).presets[0].name, 'Name')
+        raw[30] = 38
+        preset = poison.parse(raw).presets[0]
+        self.assertEqual(preset.name, 'Name')
+        self.assertEqual(preset.source_slot, 0)
+
+    def test_source_slot_is_not_part_of_a_full_length_name(self):
+        preset = poison.parse(encode([('FifteenByteName', [('GAIN', 1)], 247)])).presets[0]
+        self.assertEqual(preset.name, 'FifteenByteName')
+        self.assertEqual(preset.raw_name, b'FifteenByteName')
+        self.assertEqual(preset.source_slot, 247)
 
     def test_reject_corruption(self):
         original = encode([('One', [('GAIN', 1)]), ('Two', [('GAIN', 2)])])
@@ -80,8 +95,20 @@ class ParserTests(unittest.TestCase):
         single = poison.load(MATERIALS / 'SinglePreset.p202')
         self.assertEqual(len(bank.presets), 47)
         self.assertTrue(all(len(p.parameters) == 106 for p in bank.presets))
+        self.assertTrue(all(set(p.parameters) == set(P202_TAG_TO_FACTORY_KEY)
+                            for p in bank.presets))
+        self.assertEqual([p.source_slot for p in bank.presets], list(range(47)))
         match = next(p for p in bank.presets if p.name == 'Pretty Pluck')
         self.assertEqual(single.presets[0].parameters, match.parameters)
+        self.assertEqual(single.presets[0].source_slot, match.source_slot)
+        self.assertEqual(match.source_slot, 38)
+
+    def test_factory_schema_crosswalk_is_complete(self):
+        self.assertEqual(P202_PARAMETER_COUNT, 106)
+        self.assertEqual(len(P202_TAG_TO_FACTORY_KEY), 106)
+        self.assertEqual(len(set(P202_TAG_TO_FACTORY_KEY.values())), 106)
+        self.assertEqual(FACTORY_ONLY_PARAMETER_KEYS, ('TEMPOSYNC',))
+        self.assertEqual(FACTORY_PRESET_COUNT, 594)
 
 
 class MappingTests(unittest.TestCase):
@@ -369,16 +396,19 @@ class CliTests(unittest.TestCase):
         self.assertIn('P202 file:', text)
         self.assertIn('Record: offset 20', text)
         self.assertIn('[LFO 2]', text)
-        self.assertIn('L2FQ = 0.5 | normalized 0..1; MIDI≈63.500 (~64); free-rate≈10 Hz', text)
-        self.assertIn('L2>P = 0.800000012 | signed normalized -1..1; MIDI≈114.300 (~114); pitch≈', text)
+        self.assertIn('Source slot: 0', text)
+        self.assertIn('L2FQ / LFO2FREQ = 0.5 | normalized 0..1; MIDI≈63.500 (~64); free-rate≈10 Hz', text)
+        self.assertIn('L2>P / LFO2PITCH = 0.800000012 | signed normalized -1..1; MIDI≈114.300 (~114); pitch≈', text)
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(main(['inspect', str(single), '--json']), 0)
         payload = json.loads(output.getvalue())
         self.assertEqual(payload['file_size'], len(single.read_bytes()))
+        self.assertEqual(payload['presets'][0]['source_slot'], 0)
         lfo_pitch = next(item for item in payload['presets'][0]['decoded_parameters']
                          if item['tag'] == 'L2>P')
+        self.assertEqual(lfo_pitch['factory_key'], 'LFO2PITCH')
         self.assertAlmostEqual(lfo_pitch['midi_7bit_estimate'], 114.3, places=4)
         self.assertAlmostEqual(lfo_pitch['decoded']['pitch_semitones'],
                                lfo_pitch_semitones(.8, Profile()), places=5)

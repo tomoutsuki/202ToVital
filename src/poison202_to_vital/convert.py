@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import math
 
 from .poison import Preset
+from .poison_schema import P202_TAG_TO_FACTORY_KEY
 from .profile import Profile
 from . import vital
 
@@ -133,6 +134,7 @@ class Converter:
         self.preset = vital.init_preset(source.name)
         self.settings = self.preset['settings']
         self.report = {'name': source.name, 'source_index': source.index,
+                       'source_slot': source.source_slot,
                        'profile': profile.to_dict(), 'parameters': {}, 'warnings': [],
                        'fidelity': 'uncalibrated approximation; no Poison audio comparison'}
         self.set('beats_per_minute', bpm / 60)
@@ -155,7 +157,10 @@ class Converter:
             value = round(value)
         if value != raw:
             self.warn('source_range', f'{tag}={raw} is outside the expected domain; using {value}.')
-        self.report['parameters'][tag] = {'raw': self.source.parameters.get(tag), 'used': value, 'status': status}
+        self.report['parameters'][tag] = {
+            'factory_key': P202_TAG_TO_FACTORY_KEY.get(tag),
+            'raw': self.source.parameters.get(tag), 'used': value, 'status': status,
+        }
         return value
 
     def set(self, key: str, value: float):
@@ -537,7 +542,10 @@ class Converter:
         self.effects()
         for tag, value in self.source.parameters.items():
             if tag not in self.report['parameters']:
-                self.report['parameters'][tag] = {'raw': value, 'status': 'unmapped'}
+                self.report['parameters'][tag] = {
+                    'factory_key': P202_TAG_TO_FACTORY_KEY.get(tag),
+                    'raw': value, 'status': 'unmapped',
+                }
                 self.warn('unknown_parameter', f'Unknown tag {tag}={value}; preserved in report, not converted.')
         self.preset['comments'] = 'Poison-202 conversion (' + self.profile.name + '). Approximate; see report. ' + ' '.join(w['message'] for w in self.report['warnings'])
         vital.validate(self.preset)

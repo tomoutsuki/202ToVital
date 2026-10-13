@@ -21,7 +21,7 @@ accuracy remain unverified.
 
 ## Recorded run
 
-The 18 unittest cases passed. The installed `202tovital` entry point successfully
+The 29 unittest cases pass. The installed `202tovital` entry point successfully
 inspected the single export and converted the supplied bank. All 47 presets
 loaded in Vita 0.1.0 and rendered finite, non-silent samples at 22,050 Hz,
 MIDI note 60, velocity 0.7, a 0.35-second gate and a 0.75-second render.

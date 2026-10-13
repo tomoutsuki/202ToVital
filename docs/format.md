@@ -2,9 +2,9 @@
 
 ## Poison P202 binary framing
 
-Evidence: `../.materials/SinglePreset.p202` (888 bytes) and
-`../.materials/SynthUserBank.p202` (41,000 bytes). Both were supplied by the user.
-The following describes these exports, not every Poison version.
+Evidence: 14 supplied P202 files containing 60 records, cross-checked against
+Poison-202 2.5.7's factory preset plist. The following describes those exports,
+not every Poison version.
 
 | Byte offset | Observed encoding | Meaning |
 | --- | --- | --- |
@@ -13,13 +13,18 @@ The following describes these exports, not every Poison version.
 | 6 | little-endian uint16, value 16 | Assumed absolute offset-table start |
 | 8 | eight zero bytes | Reserved; meaning unknown |
 | 16 | count little-endian uint32 values | Absolute record offsets |
-| record + 0 | 16 bytes | NUL-terminated name area; trailing bytes can be nonzero |
+| record + 0 | 15 bytes | NUL-padded preset name (UTF-8 in observed files) |
+| record + 15 | uint8 | Retained zero-based source-bank slot |
 | record + 16 | repeated 8-byte entries | Four ASCII tag bytes followed by little-endian IEEE-754 float32 |
 | record end - 4 | `####` | Terminator |
 
-Each supplied record is 868 bytes: name area + 106 tagged values + terminator.
+Each supplied record is 868 bytes: 15-byte name + one-byte slot + 106 tagged
+values + terminator.
 Single record starts at 20; bank records start at 204 and increase by 868.
-The parser uses offsets and record framing, not a hardcoded number/order of tags.
+The slot byte is exactly 0..46 in the supplied 47-record bank. Single exports do
+not reset it: Pretty Pluck retains slot 38 and matches zero-based bank record 38.
+The parser exposes this as `source_slot` and uses offsets and record framing,
+not a hardcoded number/order of tags.
 It rejects unsupported header layouts, duplicate tags, NaN/Inf, invalid offsets,
 trailing bytes, non-ASCII tags and truncation. Unknown well-framed tags survive
 inspection and conversion reports. Reserved header bytes survive in the report.
@@ -27,8 +32,22 @@ Maximum supported count is 300, based on the supplied Poison feature inventory.
 UTF-8 names fall back to Latin-1 when decoding fails; encoding is not confirmed.
 
 Pretty Pluck (bank entry 39) has exactly the same 106 decoded values as the
-single preset. Name padding differs from zero, so treating all 16 bytes as a
-plain printable name would be incorrect.
+single preset. Its byte at record offset 15 is `0x26` (38), which was previously
+misidentified as nonzero name padding.
+
+## Poison 2.5.7 factory schema
+
+`PresetsNew.plist` contains 594 presets in six banks of 100, 100, 100, 100, 94,
+and 100 entries. Its union has 109 keys: `name`, `tags`, and 107 parameter keys.
+Every one of the 106 P202 tags maps one-to-one to a long factory key; the mapping
+is available at runtime as `poison_schema.P202_TAG_TO_FACTORY_KEY` and is emitted
+by `202tovital inspect`. Record tag order is not semantic and one supplied
+rewritten file uses a different order.
+
+The only factory parameter absent from observed P202 records is `TEMPOSYNC`.
+Modern P202 data instead carries three independent switches: `TSL1` maps to
+`TEMPOLFO1`, `TSL2` to `TEMPOLFO2`, and `TSDE` to `TEMPODELAY`. The converter
+must not synthesize a shared `TEMPOSYNC` value.
 
 Tags suggest meaning; storage alone does not prove the corresponding UI mapping.
 Examples: `O1PI` stores semitone-like integers -24..24, `O1TU` stores signed
@@ -41,7 +60,8 @@ interpretations for known controls. For normalized LFO controls it reports an
 approximate 7-bit MIDI position; signed depths use `(value + 1) * 63.5`. This is
 a UI-scale estimate, not a MIDI byte decoded from the file. A single preset is
 shown in detail by default, `--preset` selects one bank entry, and `--json`
-includes record framing, raw parameters and decoded annotations.
+includes record framing, source slot, raw parameters, factory keys and decoded
+annotations.
 
 ## Vital serialization
 

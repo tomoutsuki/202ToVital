@@ -1,9 +1,9 @@
 """Read the tagged little-endian P202 layout observed in the supplied exports.
 
 Header: magic, uint16 count, uint16 offset-table-start (=16), eight reserved
-bytes, then count absolute uint32 offsets. Each record has a 16-byte name
-area, arbitrary-order (four-byte ASCII tag, float32) pairs, and #### terminator.
-The name is NUL terminated; bytes after the first NUL are not reliably zero.
+bytes, then count absolute uint32 offsets. Each record has a 15-byte name field,
+a one-byte retained source-bank slot, arbitrary-order (four-byte ASCII tag,
+float32) pairs, and a #### terminator. The name is NUL-padded.
 """
 from dataclasses import dataclass
 import math
@@ -25,6 +25,7 @@ class Preset:
     offset: int
     raw_name: bytes = b""
     record_size: int = 0
+    source_slot: int | None = None
 
 
 @dataclass(frozen=True)
@@ -57,7 +58,8 @@ def parse(data: bytes) -> Bank:
         record = data[start:end]
         if len(record) < 28 or (len(record) - 20) % 8 or record[-4:] != b"####":
             raise FormatError(f"Preset {index}: truncated or invalid record framing")
-        raw_name = record[:16]
+        raw_name = record[:15]
+        source_slot = record[15]
         name_bytes = raw_name.split(b"\0", 1)[0]
         try:
             name = name_bytes.decode("utf-8")
@@ -76,7 +78,8 @@ def parse(data: bytes) -> Bank:
             if tag in parameters:
                 raise FormatError(f"Preset {index}: duplicate parameter tag {tag}")
             parameters[tag] = value
-        presets.append(Preset(name, parameters, index, start, raw_name, len(record)))
+        presets.append(Preset(name, parameters, index, start, raw_name,
+                              len(record), source_slot))
     return Bank(tuple(presets), data[8:16])
 
 

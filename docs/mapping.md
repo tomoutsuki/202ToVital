@@ -39,6 +39,13 @@ The current JP-inspired HP2 asset improves the waveform baseline but does not
 establish an exact reconstruction of Roland's pitch-dependent filtering or
 aliasing. Fine tuning assumes +/-100 cents; tune range is configurable.
 
+The IPA's `jimsawopen64x1024.data` contains 64 pitch-indexed, band-limited
+1,024-sample saw tables. It is not a morph wavetable or a complete Super Saw
+render. A separate `computeSuperSawDetuneForOsc(int)` symbol corroborates runtime
+detune processing. The converter therefore does not embed `jimsawopen64x1024`
+as a Vital wavetable, and this discovery does not turn the current Super Saw
+MIX/DETUNE fits into exact reverse-engineered laws.
+
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs
 ENV4/ENV5, and pitch ADs use one-shot LFO3/LFO4. This leaves ENV1 available for

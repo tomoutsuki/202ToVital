@@ -72,7 +72,8 @@ Defaults
 are explicit hypotheses except where controlled experiments are cited in the
 mapping notes. Numeric mapping curves do not become measurements merely because
 they are configurable.
-See [mapping notes](docs/mapping.md) and [format evidence](docs/format.md).
+See [mapping notes](docs/mapping.md), [format evidence](docs/format.md), and the
+[Poison-202 2.5.7 IPA findings](docs/ipa-reverse-engineering.md).
 
 ## Validation
 
