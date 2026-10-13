@@ -36,6 +36,13 @@ fractions, `F1CU` stores fractions 0..1, `GAIN` reaches 1.88473. They are **not
 7-bit MIDI CC values**. `F1TY`/`F2TY` range 0..5 despite five documented filter
 responses; the default profile hypothesizes 0=off, 1..5=LP/BP/HP/Peak/Notch.
 
+`202tovital inspect` preserves those float32 values verbatim and adds conservative
+interpretations for known controls. For normalized LFO controls it reports an
+approximate 7-bit MIDI position; signed depths use `(value + 1) * 63.5`. This is
+a UI-scale estimate, not a MIDI byte decoded from the file. A single preset is
+shown in detail by default, `--preset` selects one bank entry, and `--json`
+includes record framing, raw parameters and decoded annotations.
+
 ## Vital serialization
 
 Reference source revision: `636ca0ef517a4db087a6a08a6a8a5e704e21f836`, from

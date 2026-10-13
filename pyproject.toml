@@ -16,4 +16,4 @@ dependencies = []
 where = ["src"]
 
 [tool.setuptools.package-data]
-poison202_to_vital = ["data/*.json"]
+poison202_to_vital = ["data/*.json", "data/*.wav"]

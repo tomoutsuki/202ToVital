@@ -14,6 +14,7 @@ import tempfile
 import zipfile
 
 VERSION = '1.0.6'
+JP_INSPIRED_HP2_WAV = 'JP_inspired_HP2_fc_1p5xF0_2048.wav'
 
 
 @lru_cache(maxsize=1)
@@ -28,24 +29,63 @@ def line(name: str, points: list[tuple[float, float]], smooth: bool = False) -> 
             'powers': [0.0] * len(points), 'smooth': smooth}
 
 
+def sine_lfo() -> dict:
+    """Return Vital's built-in three-point smooth sine shape exactly."""
+    return line('Sin', [(0, 0), (.5, 1), (1, 0)], smooth=True)
+
+
+@lru_cache(maxsize=1)
+def jp_inspired_supersaw_wave_data() -> str:
+    """Load the packaged mono IEEE-float single-cycle Super Saw asset."""
+    wav = files('poison202_to_vital').joinpath('data').joinpath(JP_INSPIRED_HP2_WAV).read_bytes()
+    if wav[:12] != b'RIFF' + (len(wav) - 8).to_bytes(4, 'little') + b'WAVE':
+        raise ValueError(f'Invalid RIFF WAV resource: {JP_INSPIRED_HP2_WAV}')
+    position, fmt, payload = 12, None, None
+    while position + 8 <= len(wav):
+        kind = wav[position:position + 4]
+        size = int.from_bytes(wav[position + 4:position + 8], 'little')
+        start, end = position + 8, position + 8 + size
+        if end > len(wav):
+            raise ValueError(f'Truncated WAV resource: {JP_INSPIRED_HP2_WAV}')
+        if kind == b'fmt ':
+            fmt = wav[start:end]
+        elif kind == b'data':
+            payload = wav[start:end]
+        position = end + size % 2
+    if fmt is None or payload is None or len(fmt) < 16:
+        raise ValueError(f'Missing format or data chunk in {JP_INSPIRED_HP2_WAV}')
+    audio_format, channels, _rate, _byte_rate, block_align, bits = struct.unpack('<HHIIHH', fmt[:16])
+    if (audio_format, channels, block_align, bits, len(payload)) != (3, 1, 4, 32, 2048 * 4):
+        raise ValueError(f'Unexpected WAV format for {JP_INSPIRED_HP2_WAV}')
+    samples = struct.unpack('<2048f', payload)
+    if not all(math.isfinite(sample) for sample in samples):
+        raise ValueError(f'Non-finite sample in {JP_INSPIRED_HP2_WAV}')
+    return base64.b64encode(payload).decode('ascii')
+
+
 @lru_cache(maxsize=128)
 def wavetable(shape: str, width: float = 0.5) -> dict:
-    wave = []
-    for i in range(2048):
-        phase = i / 2048
-        if shape in ('saw', 'supersaw'):
-            value = 2 * phase - 1
-        elif shape == 'pulse':
-            value = 1.0 if phase < width else -1.0
-        elif shape == 'sine':
-            value = math.sin(2 * math.pi * phase)
-        elif shape == 'triangle':
-            value = 1 - 4 * abs(phase - 0.5)
-        else:
-            raise ValueError(f'Unknown waveform: {shape}')
-        wave.append(value)
-    data = base64.b64encode(struct.pack('<2048f', *wave)).decode('ascii')
-    return {'name': f'202ToVital {shape}', 'author': '202ToVital', 'version': VERSION,
+    if shape == 'jp_inspired_supersaw':
+        data = jp_inspired_supersaw_wave_data()
+        name = '202ToVital JP-8000 Inspired HP2'
+    else:
+        wave = []
+        for i in range(2048):
+            phase = i / 2048
+            if shape in ('saw', 'supersaw'):
+                value = 2 * phase - 1
+            elif shape == 'pulse':
+                value = 1.0 if phase < width else -1.0
+            elif shape == 'sine':
+                value = math.sin(2 * math.pi * phase)
+            elif shape == 'triangle':
+                value = 1 - 4 * abs(phase - 0.5)
+            else:
+                raise ValueError(f'Unknown waveform: {shape}')
+            wave.append(value)
+        data = base64.b64encode(struct.pack('<2048f', *wave)).decode('ascii')
+        name = f'202ToVital {shape}'
+    return {'name': name, 'author': '202ToVital', 'version': VERSION,
             'remove_all_dc': True, 'full_normalize': False,
             'groups': [{'components': [{'type': 'Wave Source', 'interpolation': 1,
                                         'interpolation_style': 0,

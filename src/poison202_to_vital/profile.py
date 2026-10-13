@@ -19,16 +19,14 @@ class Profile:
     lfo_max_hz: float = 40.0
     lfo_rate_exponent: float = 2.0
     lfo_pitch_semitones: float = 24.0
+    lfo_pitch_exponent: float = 3.3
     eq_gain_db: float = 12.0
     portamento_max_seconds: float = 2.0
     output_gain_db: float = -18.0
     supersaw_detune_range_cents: float = 20.0
-    supersaw_detune_power: float = 0.95
-    supersaw_asymmetric_topology: bool = True
-    supersaw_octave_layer: bool = False
-    supersaw_center_gain_scale: float = 0.45
-    supersaw_side_gain_scale: float = 1.66
-    supersaw_center_second_harmonic_ratio: float = 3.89
+    supersaw_detune_power: float = 1.09
+    xmod_depth_max: float = 1.0
+    xmod_depth_power: float = 1.0
     waveform_order: tuple[str, ...] = ("saw", "pulse", "sine", "triangle", "supersaw")
     filter_order: tuple[str, ...] = ("off", "lp", "bp", "hp", "peak", "notch")
     lfo_order: tuple[str, ...] = ("triangle", "sine", "saw", "square", "trapezoid", "random")
@@ -40,15 +38,6 @@ class Profile:
             value = getattr(self, field.name)
             if field.name in ('name', 'waveform_order', 'filter_order', 'lfo_order'):
                 continue
-            if field.name in ('supersaw_asymmetric_topology', 'supersaw_octave_layer'):
-                if not isinstance(value, bool):
-                    raise ValueError(f'Profile {field.name} must be boolean')
-                continue
-            if field.name in ('supersaw_center_gain_scale', 'supersaw_side_gain_scale',
-                              'supersaw_center_second_harmonic_ratio'):
-                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 8:
-                    raise ValueError(f'Profile {field.name} must be between 0 and 8')
-                continue
             if field.name == 'supersaw_detune_range_cents':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 48:
                     raise ValueError('Profile supersaw_detune_range_cents must be between 0 and 48')
@@ -56,6 +45,14 @@ class Profile:
             if field.name == 'supersaw_detune_power':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 5:
                     raise ValueError('Profile supersaw_detune_power must be between 0 and 5')
+                continue
+            if field.name == 'xmod_depth_max':
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 1:
+                    raise ValueError('Profile xmod_depth_max must be between 0 and 1')
+                continue
+            if field.name == 'xmod_depth_power':
+                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not 0 < value <= 8:
+                    raise ValueError('Profile xmod_depth_power must be between 0 and 8')
                 continue
             if field.name == 'output_gain_db':
                 if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not -60 <= value <= 6:

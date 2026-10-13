@@ -39,18 +39,19 @@ def supersaw_blend(value: float) -> float:
     return ((2.0 + ratio) - math.sqrt(max(0.0, discriminant))) / 2.0
 
 
-def supersaw_gains(value: float) -> tuple[float, float]:
-    """Return the fitted Poison center and per-side Super Saw gains."""
-    value = max(0.0, min(1.0, value))
-    return (0.99785 - 0.55366 * value,
-            0.044372 + 1.2841 * value - 0.73764 * value * value)
-
-
 def supersaw_outer_cents(value: float) -> float:
-    """Approximate positive outer-voice separation measured in Poison."""
+    """Return the symmetric outer spread fitted to the asymmetric JP pair.
+
+    Vital unison is symmetric, so use the mean absolute distance of Szabo's
+    measured -201.79/+176.69-cent outer voices after applying the fitted
+    Poison DETUNE curve in the frequency-ratio domain.
+    """
     if value <= 0.0:
         return 0.0
-    return 1200.0 * math.log2(1.0 + 0.10745242 * supersaw_detune_curve(value))
+    scale = supersaw_detune_curve(value)
+    lower = 1200.0 * math.log2(1.0 + (0.88997686 - 1.0) * scale)
+    upper = 1200.0 * math.log2(1.0 + (1.10745242 - 1.0) * scale)
+    return (upper - lower) / 2.0
 
 
 def vital_unison_detune_value(outer_cents: float, detune_range_cents: float) -> float:
@@ -63,30 +64,43 @@ def vital_unison_detune_value(outer_cents: float, detune_range_cents: float) -> 
     return math.sqrt(max(0.0, outer_cents / detune_range_cents))
 
 
-# Full-DETUNE offsets measured from the controlled Poison C4 recording.  The
-# two side pairs are averaged around a common auxiliary-oscillator center so
-# they can be represented by Vital's 5-voice (center, +/-inner, +/-outer)
-# unison layout.  The sixth Poison voice remains the single OSC1 center voice.
-_SUPERSAW_MEASURED_FULL_OUTER_CENTS = 176.686
-_SUPERSAW_AUX_CENTER_CENTS = 33.606
-_SUPERSAW_AUX_INNER_CENTS = 69.237
-_SUPERSAW_AUX_OUTER_CENTS = 144.485
-_SUPERSAW_AUX_DETUNE_POWER = 2 * math.log(_SUPERSAW_AUX_OUTER_CENTS / _SUPERSAW_AUX_INNER_CENTS - 1)
-_SUPERSAW_EQUAL_VOICE_BLEND = (3.0 - math.sqrt(7.0 / 3.0)) / 2.0
+def xmod_effective_depth(value: float, profile: Profile) -> float:
+    """Map normalized Poison XMOD to Vital's effective phase-mod depth.
 
-
-def supersaw_auxiliary_topology(value: float) -> tuple[float, float, float]:
-    """Return Vital OSC2 center shift, outer spread, and detune power.
-
-    The observed six Poison clusters at full DETUNE are approximated as a
-    single OSC1 center plus a five-voice Vital OSC2 group.  Its center and
-    pair spacings scale with the existing measured DETUNE response, preserving
-    the controlled curve between zero and full DETUNE.
+    The defaults deliberately preserve a linear effective-depth hypothesis.
+    ``xmod_depth_max`` and ``xmod_depth_power`` make that hypothesis replaceable
+    once controlled Poison/Vital sideband measurements are available.
     """
-    scale = supersaw_outer_cents(value) / _SUPERSAW_MEASURED_FULL_OUTER_CENTS
-    return (_SUPERSAW_AUX_CENTER_CENTS * scale,
-            _SUPERSAW_AUX_OUTER_CENTS * scale,
-            _SUPERSAW_AUX_DETUNE_POWER)
+    value = max(0.0, min(1.0, value))
+    return profile.xmod_depth_max * value ** profile.xmod_depth_power
+
+
+def xmod_vital_amount(value: float, profile: Profile) -> float:
+    """Serialize an XMOD depth for Vital's quadratically scaled FM control."""
+    return math.sqrt(xmod_effective_depth(value, profile))
+
+
+@dataclass(frozen=True)
+class XmodModel:
+    """One-way OSC2-to-OSC1 XMOD hypothesis and its dynamic controls."""
+    depth: float
+    velocity_depth: float
+    wheel_depth: float
+    wheel_enabled: bool
+    profile: Profile
+
+    @property
+    def active(self) -> bool:
+        return bool(self.depth or self.velocity_depth or (self.wheel_enabled and self.wheel_depth))
+
+    @property
+    def vital_amount(self) -> float:
+        return xmod_vital_amount(self.depth, self.profile)
+
+    def control_delta(self, additive_depth: float) -> float:
+        """Approximate nonlinear Poison modulation at the source's full scale."""
+        target = min(1.0, self.depth + max(0.0, additive_depth))
+        return xmod_vital_amount(target, self.profile) - self.vital_amount
 
 
 def lfo_free_rate_hz(value: float, profile: Profile) -> float:
@@ -98,6 +112,13 @@ def lfo_free_rate_hz(value: float, profile: Profile) -> float:
     """
     value = max(0.0, min(1.0, value))
     return max(profile.lfo_min_hz, profile.lfo_max_hz * value ** profile.lfo_rate_exponent)
+
+
+def lfo_pitch_semitones(value: float, profile: Profile) -> float:
+    """Map Poison's signed LFO pitch control through its provisional cubic law."""
+    value = max(-1.0, min(1.0, value))
+    return math.copysign(profile.lfo_pitch_semitones * abs(value) ** profile.lfo_pitch_exponent,
+                         value)
 
 
 @dataclass
@@ -114,7 +135,6 @@ class Converter:
         self.report = {'name': source.name, 'source_index': source.index,
                        'profile': profile.to_dict(), 'parameters': {}, 'warnings': [],
                        'fidelity': 'uncalibrated approximation; no Poison audio comparison'}
-        self.asymmetric_supersaw_aux = False
         self.set('beats_per_minute', bpm / 60)
         self.warn('uncalibrated', 'Poison enum order, timing, cutoff, fine tuning, gain and modulation laws are inferred. Profile values are hypotheses, not measured calibration.')
 
@@ -195,100 +215,51 @@ class Converter:
         p = self.profile
         balance = self.read('BLNC', lo=-1)
         levels = [(.5 * (1 - balance)) ** .5, (.5 * (1 + balance)) ** .5]
-        osc1_shape = p.waveform_order[int(self.read('O1TY', hi=4, discrete=True))]
-        supersaw_mix = self.read('O1PW')
-        detune = self.read('O1PM')
-        interaction_active = any(abs(self.source.parameters.get(tag, 0)) > 1e-12
-                                 for tag in ('XMOD', 'RING', 'SYNC', 'MXFM', 'VELX'))
-        self.asymmetric_supersaw_aux = (
-            p.supersaw_asymmetric_topology and not serial and levels[1] < 1e-6
-            and osc1_shape == 'supersaw' and not interaction_active
-        )
-        if self.asymmetric_supersaw_aux:
-            self.warn('supersaw_topology', 'Muted Poison OSC2 is repurposed as a five-voice Vital auxiliary group. Together with single-voice OSC1 it approximates the six measured asymmetric Super Saw pitch clusters; oscillator gains and waveform/phase behavior remain approximate.')
         for i, level in enumerate(levels, 1):
             prefix, tag = f'osc_{i}', f'O{i}'
             shape = p.waveform_order[int(self.read(tag + 'TY', hi=4, discrete=True))]
             width = self.read(tag + 'PW')
             pwm = self.read(tag + 'PM')
-            use_auxiliary = self.asymmetric_supersaw_aux and i == 2
-            if use_auxiliary:
-                # These source controls are inaudible with BLNC=-1, but retain
-                # them in the report rather than presenting them as unknown.
-                self.read('O2PI', lo=-24, hi=24, discrete=True, status='replaced_by_supersaw_topology')
-                self.read('O2TU', lo=-1, status='replaced_by_supersaw_topology')
-                for source_tag in ('A2AT', 'A2DE', 'A2RE', 'A2SU', 'O2PA', 'O2PD', 'O2PE'):
-                    self.read(source_tag, lo=-1 if source_tag == 'O2PE' else 0,
-                              status='replaced_by_supersaw_topology')
-                # Record the muted source branch for auditability, then replace
-                # it with a companion built from OSC1's Super Saw controls.
-                self.settings['wavetables'][i-1] = vital.wavetable('supersaw')
-                self.set(prefix + '_on', 1)
-                self.set(prefix + '_transpose', self.read('O1PI', lo=-24, hi=24, discrete=True))
-                center, outer, detune_power = supersaw_auxiliary_topology(detune)
-                tune = self.read('O1TU', lo=-1) * p.fine_tune_cents / 100 + center / 100
-                self.set(prefix + '_tune', tune)
-                self.set(prefix + '_destination', 0)
-                self.set(prefix + '_stereo_spread', 0)
-                self.set(prefix + '_random_phase', 1)
-                self.set(prefix + '_unison_voices', 5)
-                self.set(prefix + '_unison_blend', _SUPERSAW_EQUAL_VOICE_BLEND)
-                self.set(prefix + '_detune_range', p.supersaw_detune_range_cents)
-                self.set(prefix + '_detune_power', detune_power)
-                self.set(prefix + '_unison_detune', vital_unison_detune_value(outer, p.supersaw_detune_range_cents))
-            else:
-                self.settings['wavetables'][i-1] = vital.wavetable(shape, .5 + .49 * width)
-                self.set(prefix + '_on', 1)
-                self.set(prefix + '_transpose', self.read(tag + 'PI', lo=-24, hi=24, discrete=True))
-                self.set(prefix + '_tune', self.read(tag + 'TU', lo=-1) * p.fine_tune_cents / 100)
-                self.set(prefix + '_destination', 0 if serial else i - 1)
-                self.set(prefix + '_stereo_spread', 0)
-                self.set(prefix + '_random_phase', 0)
-            if self.asymmetric_supersaw_aux and i == 1:
-                # OSC1 supplies Poison's observed zero-cent cluster.
-                self.set(prefix + '_unison_voices', 1)
-                self.set(prefix + '_random_phase', 1)
-            elif use_auxiliary:
-                pass
-            elif shape == 'supersaw':
+            # A Poison Super Saw remains one Vital oscillator. Its embedded
+            # JP-inspired single-cycle wavetable provides the spectral color;
+            # unison supplies the seven independently detuned voices.
+            wavetable_shape = 'jp_inspired_supersaw' if shape == 'supersaw' else shape
+            self.settings['wavetables'][i-1] = vital.wavetable(wavetable_shape, .5 + .49 * width)
+            self.set(prefix + '_on', 1)
+            self.set(prefix + '_transpose', self.read(tag + 'PI', lo=-24, hi=24, discrete=True))
+            self.set(prefix + '_tune', self.read(tag + 'TU', lo=-1) * p.fine_tune_cents / 100)
+            self.set(prefix + '_destination', 0 if serial else i - 1)
+            self.set(prefix + '_stereo_spread', 0)
+            self.set(prefix + '_random_phase', 0)
+            if shape == 'supersaw':
                 self.set(prefix + '_unison_voices', 7)
+                self.set(prefix + '_stack_style', 0)
                 self.set(prefix + '_unison_blend', supersaw_blend(width))
                 self.set(prefix + '_detune_range', p.supersaw_detune_range_cents)
                 self.set(prefix + '_detune_power', p.supersaw_detune_power)
                 outer_cents = supersaw_outer_cents(pwm)
                 self.set(prefix + '_unison_detune', vital_unison_detune_value(outer_cents, p.supersaw_detune_range_cents))
+                self.set(prefix + '_phase', .5)
                 self.set(prefix + '_random_phase', 1)
-                self.warn('supersaw', 'Seven-voice Vital unison uses fitted nonlinear Poison MIX and DETUNE curves, detune power 0.95, and random phase. Poison exposes six strong full-detune pitch clusters, including no strong lowest JP side voice; Vital symmetric unison and the underlying waveform remain approximate.')
+                self.warn('supersaw', f'Seven-voice Vital unison stays in the corresponding oscillator slot and uses the embedded JP-8000 Inspired HP2 wavetable, fitted nonlinear Poison MIX/DETUNE curves, detune power {p.supersaw_detune_power:g}, zero stereo spread, and random phase. Vital unison is symmetric, and absolute loudness remains approximate.')
             elif shape == 'pulse' and pwm:
                 self.warn('unsupported', f'{tag}PM: dynamic PWM routing is unknown; static pulse width is retained.')
             # Parallel TVA is approximated before each filter. Serial TVA1 remains
             # the main post-filter envelope; TVA2 modulates OSC2 before the sum.
-            if self.asymmetric_supersaw_aux:
-                # Both reconstructed oscillators represent Poison OSC1.  OSC2's
-                # source MIX is muted and must not attenuate the auxiliary group.
-                center_gain, side_gain = supersaw_gains(supersaw_mix)
-                if p.supersaw_octave_layer:
-                    center_gain *= p.supersaw_center_gain_scale
-                    side_gain *= p.supersaw_side_gain_scale
-                topology_gain = center_gain if i == 1 else side_gain
-                self.set(prefix + '_level', 0)
-                self.mod('env_2', prefix + '_level', math.sqrt(topology_gain))
-            elif serial and i == 1:
+            if serial and i == 1:
                 self.set(prefix + '_level', level)
             else:
                 self.set(prefix + '_level', 0)
                 self.mod(f'env_{i+1}', prefix + '_level', level)
-            envelope_number, envelope_tag = (2, 'A1') if use_auxiliary else (i + 1, f'A{i}')
-            self.envelope(envelope_number, envelope_tag)
-            pitch_tag = 'O1' if use_auxiliary else tag
-            attack = p.seconds(self.read(pitch_tag + 'PA'))
-            decay = p.seconds(self.read(pitch_tag + 'PD'))
-            depth = self.read(pitch_tag + 'PE', lo=-1) * p.pitch_envelope_semitones
+            self.envelope(i + 1, f'A{i}')
+            attack = p.seconds(self.read(tag + 'PA'))
+            decay = p.seconds(self.read(tag + 'PD'))
+            depth = self.read(tag + 'PE', lo=-1) * p.pitch_envelope_semitones
             if depth and attack + decay:
                 duration = max(attack + decay, 1 / 512)
                 # One-shot LFOs leave all six ADSRs available for amp/filter behavior.
                 points = [(0, 0), (attack / duration, 1), (1, 0)]
-                lfo_number = i + 2 if not use_auxiliary else 5
+                lfo_number = i + 2
                 self.settings['lfos'][lfo_number - 1] = vital.line(f'Pitch AD {i}', points)
                 self.set(f'lfo_{lfo_number}_sync', 0)
                 self.set(f'lfo_{lfo_number}_sync_type', 2)
@@ -301,8 +272,7 @@ class Converter:
             self.warn('series_routing', 'Series: OSC2 TVA precedes filter sum; TVA1 controls final voice output. Vital envelope shapes and gain law differ.')
         else:
             # Vital's mandatory envelope must not cut a branch off before its release.
-            release = (self.settings['env_2_release'] if self.asymmetric_supersaw_aux
-                       else max(self.settings['env_2_release'], self.settings['env_3_release']))
+            release = max(self.settings['env_2_release'], self.settings['env_3_release'])
             for target, value in [('attack', 0), ('decay', 0), ('sustain', 1), ('release', release)]:
                 self.set(f'env_1_{target}', value)
             self.warn('parallel_tva', 'Independent TVA envelopes are applied before their filters and multiplied by Vital ENV1 on release; filter-tail and gain contours differ.')
@@ -333,17 +303,69 @@ class Converter:
         xmod = self.read('XMOD')
         ring = self.read('RING', discrete=True)
         sync = self.read('SYNC', discrete=True)
+        velocity_depth = self.read('VELX')
+        wheel_enabled = bool(self.read('MXFM', discrete=True))
+        wheel_depth = self.read('MDEP', 1)
+        model = XmodModel(xmod, velocity_depth, wheel_depth, wheel_enabled, self.profile)
+        supersaw = any(self.settings.get(f'osc_{number}_unison_voices', 1) > 1
+                       for number in (1, 2))
+        xmod_report = {
+            'source_mode': 'Poison XMOD',
+            'carrier': 'OSC1',
+            'modulator': 'OSC2',
+            'conversion': 'Vital FM from OSC2',
+            'vital_distortion_type': 7,
+            'raw_depth': self.source.parameters.get('XMOD'),
+            'normalized_depth': xmod,
+            'effective_depth': xmod_effective_depth(xmod, self.profile),
+            'vital_fm_amount': model.vital_amount,
+            'depth_curve': {
+                'maximum': self.profile.xmod_depth_max,
+                'power': self.profile.xmod_depth_power,
+                'vital_serialization': 'sqrt(maximum * normalized_depth ** power)',
+            },
+            'velocity': {
+                'source_depth': velocity_depth,
+                'vital_amount_delta': model.control_delta(velocity_depth),
+                'confidence': 'approximate',
+            },
+            'mod_wheel': {
+                'enabled': wheel_enabled,
+                'source_depth': wheel_depth,
+                'vital_amount_delta': model.control_delta(wheel_depth) if wheel_enabled else 0.0,
+                'confidence': 'approximate',
+            },
+            'confidence': {
+                'carrier_modulator_direction': 'hypothesis',
+                'static_depth': 'profiled hypothesis',
+                'dynamic_depth': 'approximate endpoint match',
+                'phase_and_smoothing': 'unverified',
+                'supersaw_interaction': 'unverified' if supersaw and model.active else 'not applicable',
+            },
+            'status': 'inactive',
+        }
+        self.report['cross_modulation'] = xmod_report
         # Vital only permits one phase-distortion mode per oscillator.
         if ring:
             self.set('osc_1_distortion_type', 10)  # RM <- OSC2
             self.set('osc_1_distortion_amount', 1)
             self.warn('ring', 'Ring modulation assumes OSC1 carrier and OSC2 modulator.')
-            if xmod:
-                self.warn('unsupported', 'Ring and XMOD are both enabled; Vital has one phase slot, so ring takes precedence and XMOD is omitted.')
-        elif xmod or self.source.parameters.get('MXFM') or self.source.parameters.get('VELX'):
+            if model.active:
+                xmod_report['status'] = 'omitted: ring modulation has priority'
+                self.warn('unsupported', 'Ring and XMOD are both active; Vital has one phase slot, so ring takes precedence and static/dynamic XMOD are omitted.')
+        elif model.active:
             self.set('osc_1_distortion_type', 7)  # FM <- OSC2
-            self.set('osc_1_distortion_amount', math.sqrt(xmod))
-            self.warn('xfm', 'XMOD approximated by Vital FM/phase modulation from OSC2 into OSC1; algorithm and depth are unverified.')
+            self.set('osc_1_distortion_amount', model.vital_amount)
+            velocity_delta = model.control_delta(velocity_depth)
+            wheel_delta = model.control_delta(wheel_depth) if wheel_enabled else 0.0
+            self.mod('velocity', 'osc_1_distortion_amount', velocity_delta)
+            self.mod('mod_wheel', 'osc_1_distortion_amount', wheel_delta)
+            xmod_report['status'] = 'converted'
+            self.warn('xfm', 'XMOD uses the profile depth curve and Vital FM from OSC2 into OSC1. Carrier direction, Poison algorithm, phase behavior and smoothing remain unverified.')
+            if velocity_depth or wheel_enabled:
+                self.warn('xfm_dynamic', 'Velocity and mod wheel target the FM amount with endpoint-matched control deltas. Combined modulation and the nonlinear response between endpoints remain approximate.')
+            if supersaw:
+                self.warn('xfm_supersaw', 'XMOD with Super Saw is experimental: Vital modulates its unison rendering, but Poison may cross-modulate internal Super Saw voices differently.')
         if sync:
             self.warn('unsupported', 'Poison oscillator-to-oscillator hard sync is not reproduced by Vital self-sync; SYNC is omitted.')
 
@@ -372,26 +394,27 @@ class Converter:
             else:
                 self.set(prefix + '_fade_time', fade)
                 self.set(prefix + '_phase', 0)
-                points = {'triangle': [(0, 0), (.5, 1), (1, 0)],
-                          'saw': [(0, 1), (1, 0)],
-                          'square': [(0, 1), (.5, 1), (.5, 0), (1, 0)],
-                          'trapezoid': [(0, 0), (.125, 0), (.375, 1), (.625, 1), (.875, 0), (1, 0)],
-                          'sine': [(n/64, .5 - .5 * math.cos(2 * math.pi * n/64)) for n in range(65)]}[shape]
-                self.settings['lfos'][i-1] = vital.line(shape, points)
+                if shape == 'sine':
+                    self.settings['lfos'][i-1] = vital.sine_lfo()
+                else:
+                    points = {'triangle': [(0, 0), (.5, 1), (1, 0)],
+                              'saw': [(0, 1), (1, 0)],
+                              'square': [(0, 1), (.5, 1), (.5, 0), (1, 0)],
+                              'trapezoid': [(0, 0), (.125, 0), (.375, 1), (.625, 1), (.875, 0), (1, 0)]}[shape]
+                    self.settings['lfos'][i-1] = vital.line(shape, points)
                 self.set(prefix + '_smooth_mode', 0)
                 self.set(prefix + '_smooth_time', -10)
             slots = []
-            for suffix, target, maximum in [('>P', f'osc_{i}_transpose', self.profile.lfo_pitch_semitones),
-                                             ('>F', f'filter_{i}_cutoff', self.profile.filter_envelope_semitones),
-                                             ('>A', f'osc_{i}_level', .5)]:
-                depth = self.read(tag + suffix, lo=-1)
-                # LFO2 originally targets the muted Poison OSC2 branch. It
-                # must not accidentally animate the OSC2 auxiliary group.
-                if self.asymmetric_supersaw_aux and i == 2:
-                    continue
-                slot = self.mod(source, target, depth * maximum, bipolar=True)
-                if slot:
-                    slots.append(slot)
+            pitch = lfo_pitch_semitones(self.read(tag + '>P', lo=-1), self.profile)
+            filter_depth = self.read(tag + '>F', lo=-1) * self.profile.filter_envelope_semitones
+            amp_depth = self.read(tag + '>A', lo=-1) * .5
+            for branch in (1, 2):
+                for target, depth in [(f'osc_{branch}_transpose', pitch),
+                                      (f'filter_{branch}_cutoff', filter_depth),
+                                      (f'osc_{branch}_level', amp_depth)]:
+                    slot = self.mod(source, target, depth, bipolar=True)
+                    if slot:
+                        slots.append(slot)
             if self.read(f'MLF{i}', discrete=True) and slots:
                 depth = self.read('MDEP', 1)
                 for slot in slots:
@@ -401,10 +424,7 @@ class Converter:
         if self.read('LXFM'):
             self.warn('unsupported', 'LFO cross-frequency modulation direction and law are unknown; LXFM is omitted.')
         self.warn('lfo_retrigger_policy', 'Vital normal LFOs reset per note at phase zero and random LFOs reset per note. Poison RETR is recorded but does not change this export policy.')
-        if self.asymmetric_supersaw_aux:
-            self.warn('lfo_routing', 'LFO1 modulates the reconstructed Super Saw. LFO2 source settings are retained but its original muted OSC2 destinations are omitted so it cannot animate the auxiliary group.')
-        else:
-            self.warn('lfo_routing', 'LFO1 is assigned to branch 1 and LFO2 to branch 2. Signed Poison depth is retained as a bipolar Vital modulation amount; exact branch routing and reset-phase offset still need measurement. Amp modulation is additive at oscillator level.')
+        self.warn('lfo_routing', f'Each Poison LFO is routed to both oscillator branches for pitch, filter and amplitude. Pitch uses the provisional signed power curve exponent {self.profile.lfo_pitch_exponent:g}; filter and amp depths remain linear estimates. Reset-phase offset still needs measurement, and amp modulation is additive at oscillator level.')
 
     def performance(self):
         p = self.profile
@@ -426,41 +446,18 @@ class Converter:
         for i in (1, 2):
             if self.read(f'MFI{i}', discrete=True):
                 self.mod('mod_wheel', f'filter_{i}_cutoff', wheel * p.filter_envelope_semitones)
-        if self.read('MPI2', discrete=True) and not self.asymmetric_supersaw_aux:
+        if self.read('MPI2', discrete=True):
             self.mod('mod_wheel', 'osc_2_transpose', wheel * 24)
-        velx, mx = self.read('VELX'), self.read('MXFM', discrete=True)
-        if self.settings.get('osc_1_distortion_type') == 7:
-            self.mod('velocity', 'osc_1_distortion_amount', velx)
-            if mx:
-                self.mod('mod_wheel', 'osc_1_distortion_amount', wheel)
-        elif velx or mx:
-            self.warn('unsupported', 'Velocity/wheel XMOD destinations omitted because the phase slot is used by ring modulation.')
         sub = self.read('SMIX')
         serial = bool(self.settings.get('filter_2_filter_input'))
-        octave_layer = self.asymmetric_supersaw_aux and p.supersaw_octave_layer and sub == 0
-        if octave_layer:
-            center_gain, _ = supersaw_gains(self.read('O1PW'))
-            center_gain *= p.supersaw_center_gain_scale
-            octave_gain = min(1.0, center_gain * (p.supersaw_center_second_harmonic_ratio - .5))
-            self.set('osc_3_on', 1)
-            self.set('osc_3_level', 0)
-            self.mod('env_2', 'osc_3_level', math.sqrt(octave_gain))
-            self.set('osc_3_transpose', self.read('O1PI', lo=-24, hi=24, discrete=True) + 12)
-            self.set('osc_3_tune', self.read('O1TU', lo=-1) * p.fine_tune_cents / 100)
-            self.settings['wavetables'][2] = vital.wavetable('sine')
-            self.set('osc_3_destination', 0)
-            self.set('osc_3_stereo_spread', 0)
-            self.set('osc_3_random_phase', 0)
-            self.warn('supersaw_octave_layer', 'Experimental sine layer at OSC1 +12 semitones targets the measured center second-harmonic ratio. It is enabled only by profile, shares ENV2, and still needs isolated audio validation.')
-        else:
-            self.set('osc_3_on', int(sub > 0))
-            self.set('osc_3_level', math.sqrt(sub) if serial else 0)
-            if not serial:
-                self.mod('env_2', 'osc_3_level', math.sqrt(sub))
-            self.set('osc_3_transpose', -24 if self.read('STYP', discrete=True) else -12)
-            self.settings['wavetables'][2] = vital.wavetable('sine')
-            self.set('osc_3_destination', 0)
-            self.set('osc_3_stereo_spread', 0)
+        self.set('osc_3_on', int(sub > 0))
+        self.set('osc_3_level', math.sqrt(sub) if serial else 0)
+        if not serial:
+            self.mod('env_2', 'osc_3_level', math.sqrt(sub))
+        self.set('osc_3_transpose', -24 if self.read('STYP', discrete=True) else -12)
+        self.settings['wavetables'][2] = vital.wavetable('sine')
+        self.set('osc_3_destination', 0)
+        self.set('osc_3_stereo_spread', 0)
         noise = self.read('NMIX')
         self.set('sample_on', int(noise > 0))
         self.set('sample_level', math.sqrt(noise) if serial else 0)

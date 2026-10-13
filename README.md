@@ -8,12 +8,12 @@ Requires Python 3.10+; conversion uses the standard library only.
 against the supplied single preset and 47-preset bank. Vital output is checked
 against its source and exercised with Vita. Five controlled Poison recordings
 support a close steady harmonic match for the basic waveforms at matched pitch.
-For isolated, single-oscillator Super Saw patches, the default conversion uses
-Vital OSC1 plus a five-voice OSC2 auxiliary group to match the six measured pitch
-clusters without the previous extra low unison voice. Patches that use Poison
-OSC2 or oscillator interactions retain the symmetric-unison fallback. Super Saw
-waveform, phase, MIX-dependent harmonic balance, output level and broader
-perceptual fidelity remain unverified.
+Each Poison Super Saw now stays in its corresponding single Vital oscillator and
+uses seven-voice unison with fitted MIX/DETUNE curves, a JP-derived detune-power
+fit, random phase, and zero stereo spread. Vital's symmetric voice layout cannot
+exactly reproduce Roland's asymmetric offsets. The embedded waveform remains an
+explicitly named basic saw; waveform coloration, absolute output level and
+broader perceptual fidelity remain unverified.
 Each conversion writes a report explaining assumptions, unsupported features,
 raw parameters, and any clipping. Read it before evaluating the result.
 
@@ -25,8 +25,10 @@ From this directory (`202ToVital/202ToVital`, the inner project):
 python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 .venv/bin/202tovital inspect ../.materials/SynthUserBank.p202
-.venv/bin/202tovital convert ../.materials/SinglePreset.p202 -o PrettyPluck.vital
-.venv/bin/202tovital convert ../.materials/SynthUserBank.p202 -o UserBank.vitalbank
+.venv/bin/202tovital inspect ../.materials/SynthUserBank.p202 --preset 39
+.venv/bin/202tovital inspect ../.materials/SinglePreset.p202 --json
+.venv/bin/202tovital convert ../.materials/SinglePreset.p202
+.venv/bin/202tovital convert ../.materials/SynthUserBank.p202
 .venv/bin/202tovital convert ../.materials/SynthUserBank.p202 --preset 39 -o Selected.vital
 .venv/bin/202tovital convert ../.materials/SynthUserBank.p202 --format directory -o converted/
 ```
@@ -38,6 +40,9 @@ Use `--preset "Pretty Pluck"` for an exact name (duplicate names require an inde
 Use `--bpm 128` to set tempo, `--bank-name "My Bank"` to name the bank folder,
 and `--report details.json` to choose the report path. Reports default to
 `OUTPUT.report.json`, or `conversion-report.json` in directory mode.
+Without `-o`, one selected preset writes `INPUT.vital` beside its `.p202` source;
+an unselected multi-preset source writes `INPUT.vitalbank`. `--format directory`
+without `-o` writes a same-stem sibling directory.
 Existing files are protected; `--force` explicitly permits replacement.
 A multi-preset input needs `--preset` when producing one `.vital`.
 
@@ -55,18 +60,18 @@ and the Vital preset comments.
 ```
 
 The profile exposes envelope timing/exponent, cutoff bounds, fine tuning,
-pitch/filter modulation depths, LFO rate bounds and exponent, portamento, EQ gain, output
-headroom (`output_gain_db`, default -18 dB), and
-waveform/filter/LFO enum order, Super Saw Vital detune range/power, and whether
-to use the isolated-patch asymmetric Super Saw topology. Defaults
+pitch/filter modulation depths, LFO rate bounds/exponent, the LFO pitch-curve
+exponent, portamento, EQ gain, output headroom (`output_gain_db`, default -18 dB), and
+waveform/filter/LFO enum order, Super Saw Vital detune range/power, and XMOD
+effective-depth maximum/power. XMOD uses Vital FM from OSC2 into OSC1 and reports
+its unverified topology, dynamic-control approximation, and Super Saw caveat.
+Super Saw
+uses the packaged, user-supplied
+`data/JP_inspired_HP2_fc_1p5xF0_2048.wav` single-cycle wavetable.
+Defaults
 are explicit hypotheses except where controlled experiments are cited in the
 mapping notes. Numeric mapping curves do not become measurements merely because
 they are configurable.
-
-`supersaw_octave_layer` is an off-by-default diagnostic profile option for the
-isolated Super Saw reconstruction. It adds a phase-reset octave sine on Vital
-OSC3 to test the measured center-harmonic imbalance; it is not a measured
-Poison waveform model.
 See [mapping notes](docs/mapping.md) and [format evidence](docs/format.md).
 
 ## Validation

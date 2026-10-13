@@ -24,6 +24,7 @@ class Preset:
     index: int
     offset: int
     raw_name: bytes = b""
+    record_size: int = 0
 
 
 @dataclass(frozen=True)
@@ -75,7 +76,7 @@ def parse(data: bytes) -> Bank:
             if tag in parameters:
                 raise FormatError(f"Preset {index}: duplicate parameter tag {tag}")
             parameters[tag] = value
-        presets.append(Preset(name, parameters, index, start, raw_name))
+        presets.append(Preset(name, parameters, index, start, raw_name, len(record)))
     return Bank(tuple(presets), data[8:16])
 
 

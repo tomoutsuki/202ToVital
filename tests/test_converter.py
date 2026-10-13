@@ -1,4 +1,6 @@
+import base64
 import contextlib
+import hashlib
 import io
 import json
 import math
@@ -10,9 +12,11 @@ import zipfile
 
 from poison202_to_vital import poison, vital
 from poison202_to_vital.cli import main
-from poison202_to_vital.convert import (convert, lfo_free_rate_hz, supersaw_blend, supersaw_gains,
-                                         supersaw_auxiliary_topology, supersaw_outer_cents,
-                                         vital_unison_detune_value)
+from poison202_to_vital.convert import (convert, lfo_free_rate_hz, lfo_pitch_semitones,
+                                         supersaw_blend,
+                                         supersaw_outer_cents,
+                                         vital_unison_detune_value,
+                                         xmod_effective_depth, xmod_vital_amount)
 from poison202_to_vital.profile import Profile
 
 MATERIALS = Path(__file__).resolve().parents[2] / '.materials'
@@ -46,6 +50,7 @@ class ParserTests(unittest.TestCase):
         self.assertEqual([p.name for p in bank.presets], ['First', 'Second'])
         self.assertEqual(bank.presets[1].parameters['O1PI'], 24)
         self.assertEqual(bank.presets[0].parameters['O1PI'], -12)
+        self.assertEqual(bank.presets[0].record_size, bank.presets[1].offset - bank.presets[0].offset)
 
     def test_nonzero_name_padding_is_not_text(self):
         raw = bytearray(encode([('Name', [('GAIN', 1)])]))
@@ -119,62 +124,94 @@ class MappingTests(unittest.TestCase):
                    if mod == {'source': 'lfo_1', 'destination': 'osc_1_transpose'})
         self.assertAlmostEqual(settings[f'modulation_{idx}_amount'] * 96 * .5, -24)
 
-    def test_supersaw_uses_fitted_mix_and_detune_curves(self):
-        zero = convert(source(O1TY=4, O1PW=0, O1PM=0)).preset['settings']
-        middle = convert(source(O1TY=4, O1PW=.5, O1PM=.5)).preset['settings']
-        full = convert(source(O1TY=4, O1PW=1, O1PM=1)).preset['settings']
+    def test_native_sine_lfo_dual_oscillator_routing_and_pitch_curve(self):
+        profile = Profile()
+        positive = .8
+        negative = -.8
+        result = convert(source(L1TY=1, L2TY=1,
+                                **{'L1>P': positive, 'L1>F': .25,
+                                   'L2>P': negative, 'L2>A': .4}), profile)
+        settings = result.preset['settings']
+        self.assertEqual(settings['lfos'][0], vital.sine_lfo())
+        self.assertEqual(settings['lfos'][1], vital.sine_lfo())
+        self.assertEqual(settings['lfos'][0]['name'], 'Sin')
+        self.assertEqual(settings['lfos'][0]['num_points'], 3)
+        self.assertTrue(settings['lfos'][0]['smooth'])
 
-        self.assertEqual(zero['osc_1_unison_voices'], 1)
-        self.assertEqual(zero['osc_1_random_phase'], 1)
-        for settings, detune in [(zero, 0), (middle, .5), (full, 1)]:
-            center, outer, power = supersaw_auxiliary_topology(detune)
-            self.assertEqual(settings['osc_2_unison_voices'], 5)
-            self.assertAlmostEqual(settings['osc_2_tune'] * 100, center, places=3)
-            self.assertAlmostEqual(settings['osc_2_unison_detune'] ** 2 * 20, outer, places=3)
-            self.assertAlmostEqual(settings['osc_2_detune_power'], power, places=4)
-            self.assertEqual(settings['osc_2_destination'], 0)
-
-        # A five-voice Vital group is its center and two symmetric pairs.
-        # With OSC1's zero-cent voice, this reproduces the six measured
-        # full-DETUNE clusters without the prior low extra voice.
-        center, outer, power = supersaw_auxiliary_topology(1)
-        inner = outer * ((math.exp(.5 * power) - 1) / (math.exp(power) - 1))
-        self.assertAlmostEqual(center - outer, -110.879, places=2)
-        self.assertAlmostEqual(center - inner, -35.631, places=2)
-        self.assertAlmostEqual(center + inner, 102.843, places=2)
-        self.assertAlmostEqual(center + outer, 178.091, places=2)
-
-        def modulation_amount(settings, destination):
+        def amount(source_name, destination):
             index = next(i for i, item in enumerate(settings['modulations'], 1)
-                         if item == {'source': 'env_2', 'destination': destination})
+                         if item == {'source': source_name, 'destination': destination})
             return settings[f'modulation_{index}_amount']
 
-        center_gain, side_gain = supersaw_gains(1)
-        self.assertAlmostEqual(modulation_amount(full, 'osc_1_level'), math.sqrt(center_gain))
-        self.assertAlmostEqual(modulation_amount(full, 'osc_2_level'), math.sqrt(side_gain))
-        self.assertGreater(modulation_amount(full, 'osc_2_level'), .7)
+        expected_positive = 24 * positive ** profile.lfo_pitch_exponent
+        expected_negative = -24 * abs(negative) ** profile.lfo_pitch_exponent
+        self.assertAlmostEqual(lfo_pitch_semitones(positive, profile), expected_positive)
+        self.assertAlmostEqual(lfo_pitch_semitones(negative, profile), expected_negative)
+        for oscillator in (1, 2):
+            destination = f'osc_{oscillator}_transpose'
+            self.assertAlmostEqual(amount('lfo_1', destination) * 96 * .5, expected_positive)
+            self.assertAlmostEqual(amount('lfo_2', destination) * 96 * .5, expected_negative)
+        for filter_number in (1, 2):
+            self.assertIn({'source': 'lfo_1', 'destination': f'filter_{filter_number}_cutoff'},
+                          settings['modulations'])
+        for oscillator in (1, 2):
+            self.assertIn({'source': 'lfo_2', 'destination': f'osc_{oscillator}_level'},
+                          settings['modulations'])
 
-    def test_experimental_supersaw_octave_layer(self):
-        profile = Profile(supersaw_octave_layer=True)
-        settings = convert(source(O1TY=4, O1PW=1, O1PM=1), profile).preset['settings']
-        self.assertEqual(settings['osc_3_on'], 1)
-        self.assertEqual(settings['osc_3_transpose'], 12)
-        self.assertEqual(settings['osc_3_random_phase'], 0)
-        center_gain, side_gain = supersaw_gains(1)
-        self.assertAlmostEqual(settings['modulation_1_amount'], math.sqrt(center_gain * profile.supersaw_center_gain_scale))
-        self.assertAlmostEqual(settings['modulation_2_amount'], math.sqrt(side_gain * profile.supersaw_side_gain_scale))
-        octave_slot = next(i for i, item in enumerate(settings['modulations'], 1)
-                           if item == {'source': 'env_2', 'destination': 'osc_3_level'})
-        expected_octave_gain = center_gain * profile.supersaw_center_gain_scale * (profile.supersaw_center_second_harmonic_ratio - .5)
-        self.assertAlmostEqual(settings[f'modulation_{octave_slot}_amount'], math.sqrt(expected_octave_gain))
-        self.assertTrue(any(w['code'] == 'supersaw_octave_layer'
-                            for w in convert(source(O1TY=4, O1PW=1, O1PM=1), profile).report['warnings']))
+    def test_supersaw_uses_fitted_mix_and_detune_curves(self):
+        profile = Profile()
+        zero_result = convert(source(O1TY=4, O1PW=0, O1PM=0), profile)
+        zero = zero_result.preset['settings']
+        middle = convert(source(O1TY=4, O1PW=.5, O1PM=.5), profile).preset['settings']
+        full = convert(source(O1TY=4, O1PW=1, O1PM=1), profile).preset['settings']
 
-    def test_supersaw_falls_back_when_second_oscillator_is_audible(self):
-        settings = convert(source(O1TY=4, O1PW=1, O1PM=1, BLNC=0)).preset['settings']
-        self.assertEqual(settings['osc_1_unison_voices'], 7)
-        self.assertAlmostEqual(settings['osc_1_unison_blend'], supersaw_blend(1), places=5)
-        self.assertAlmostEqual(settings['osc_1_unison_detune'] ** 2 * 20, supersaw_outer_cents(1), places=3)
+        for settings, detune in [(zero, 0), (middle, .5), (full, 1)]:
+            self.assertEqual(settings['osc_1_unison_voices'], 7)
+            self.assertEqual(settings['osc_1_stack_style'], 0)
+            self.assertEqual(settings['osc_1_detune_range'], profile.supersaw_detune_range_cents)
+            self.assertEqual(settings['osc_1_detune_power'], profile.supersaw_detune_power)
+            self.assertAlmostEqual(
+                settings['osc_1_unison_detune'] ** 2 * profile.supersaw_detune_range_cents,
+                supersaw_outer_cents(detune), places=3)
+            self.assertEqual(settings['osc_1_phase'], .5)
+            self.assertEqual(settings['osc_1_random_phase'], 1)
+            self.assertEqual(settings['osc_1_stereo_spread'], 0)
+            frame = settings['wavetables'][0]['groups'][0]['components'][0]['keyframes'][0]
+            self.assertEqual(settings['wavetables'][0]['name'], '202ToVital JP-8000 Inspired HP2')
+            self.assertEqual(hashlib.sha256(base64.b64decode(frame['wave_data'])).hexdigest(),
+                             '6f141c33c15a8f9c9cdd31ddc1f22fe8ac8bce0ffbcd1b26154c9ba969a30b95')
+            # Muted Poison OSC2 remains OSC2 and retains its own waveform.
+            self.assertEqual(settings['wavetables'][1]['name'], '202ToVital sine')
+
+        self.assertAlmostEqual(zero['osc_1_unison_blend'], 0.036917, places=5)
+        self.assertAlmostEqual(middle['osc_1_unison_blend'], supersaw_blend(.5))
+        self.assertAlmostEqual(full['osc_1_unison_blend'], 0.919709, places=5)
+
+        # Detune power 1.09 is the least-squares single-parameter fit to the
+        # averaged absolute JP-8000 inner/middle/outer pairs. Vital remains
+        # symmetric, so the individual +/- offsets cannot be exact.
+        outer = supersaw_outer_cents(1)
+        def power_scale(position):
+            power = profile.supersaw_detune_power
+            return math.expm1(power * position) / math.expm1(power)
+        fitted = (outer * power_scale(1 / 3), outer * power_scale(2 / 3), outer)
+        targets = (34.13, (112.44 + 104.41) / 2, (201.79 + 176.69) / 2)
+        for actual, target in zip(fitted, targets):
+            self.assertLess(abs(actual - target), 8)
+        self.assertTrue(any(w['code'] == 'supersaw' for w in zero_result.report['warnings']))
+
+    def test_each_poison_supersaw_keeps_its_vital_oscillator_slot(self):
+        settings = convert(source(O1TY=4, O2TY=4, O1PW=1, O2PW=.5,
+                                  O1PM=1, O2PM=.5, BLNC=0)).preset['settings']
+        for number, mix, detune in [(1, 1, 1), (2, .5, .5)]:
+            prefix = f'osc_{number}'
+            self.assertEqual(settings[prefix + '_unison_voices'], 7)
+            self.assertEqual(settings[prefix + '_stack_style'], 0)
+            self.assertAlmostEqual(settings[prefix + '_unison_blend'], supersaw_blend(mix))
+            self.assertAlmostEqual(settings[prefix + '_unison_detune'] ** 2 * 20,
+                                   supersaw_outer_cents(detune), places=3)
+            self.assertEqual(settings['wavetables'][number - 1]['name'], '202ToVital JP-8000 Inspired HP2')
+        self.assertEqual(settings['osc_1_destination'], 0)
         self.assertEqual(settings['osc_2_destination'], 1)
 
     def test_effect_bypass_and_random_lfo(self):
@@ -192,11 +229,53 @@ class MappingTests(unittest.TestCase):
         self.assertTrue({'unsupported', 'unknown_parameter', 'uncalibrated'} <= codes)
         self.assertEqual(result.preset['settings']['osc_1_distortion_type'], 10)
 
+    def test_xmod_profile_curve_and_vital_quadratic_serialization(self):
+        profile = Profile(xmod_depth_max=.64, xmod_depth_power=2)
+        self.assertAlmostEqual(xmod_effective_depth(.5, profile), .16)
+        self.assertAlmostEqual(xmod_vital_amount(.5, profile), .4)
+        result = convert(source(XMOD=.5), profile)
+        settings = result.preset['settings']
+        report = result.report['cross_modulation']
+        self.assertEqual(settings['osc_1_distortion_type'], 7)
+        self.assertAlmostEqual(settings['osc_1_distortion_amount'], .4)
+        self.assertAlmostEqual(settings['osc_1_distortion_amount'] ** 2, report['effective_depth'])
+        self.assertEqual(report['carrier'], 'OSC1')
+        self.assertEqual(report['modulator'], 'OSC2')
+        self.assertEqual(report['status'], 'converted')
+
+    def test_xmod_velocity_and_wheel_match_profiled_endpoints(self):
+        profile = Profile(xmod_depth_max=.81, xmod_depth_power=2)
+        result = convert(source(XMOD=.25, VELX=.25, MXFM=1, MDEP=.5), profile)
+        settings = result.preset['settings']
+
+        def amount(source_name):
+            index = next(i for i, item in enumerate(settings['modulations'], 1)
+                         if item == {'source': source_name, 'destination': 'osc_1_distortion_amount'})
+            return settings[f'modulation_{index}_amount']
+
+        base = xmod_vital_amount(.25, profile)
+        self.assertAlmostEqual(settings['osc_1_distortion_amount'], base)
+        self.assertAlmostEqual(amount('velocity'), xmod_vital_amount(.5, profile) - base)
+        self.assertAlmostEqual(amount('mod_wheel'), xmod_vital_amount(.75, profile) - base)
+        self.assertTrue(any(w['code'] == 'xfm_dynamic' for w in result.report['warnings']))
+
+    def test_ring_omits_all_xmod_routes_and_supersaw_is_reported(self):
+        ring = convert(source(XMOD=0, VELX=.5, MXFM=1, MDEP=.5, RING=1))
+        self.assertEqual(ring.preset['settings']['osc_1_distortion_type'], 10)
+        self.assertFalse(any(mod['destination'] == 'osc_1_distortion_amount'
+                             for mod in ring.preset['settings']['modulations']))
+        self.assertTrue(ring.report['cross_modulation']['status'].startswith('omitted'))
+
+        supersaw = convert(source(O2TY=4, XMOD=.5))
+        self.assertTrue(any(w['code'] == 'xfm_supersaw' for w in supersaw.report['warnings']))
+        self.assertEqual(supersaw.report['cross_modulation']['confidence']['supersaw_interaction'],
+                         'unverified')
+
     def test_profile_validation(self):
         for values in [{'envelope_exponent': math.nan}, {'cutoff_max_hz': 10}, {'envelope_max_seconds': 40},
                        {'fine_tune_cents': 'wrong'}, {'supersaw_detune_range_cents': 49},
-                       {'supersaw_detune_power': 0}, {'supersaw_asymmetric_topology': 1},
-                       {'supersaw_octave_layer': 1}, {'supersaw_center_gain_scale': 0}, {'lfo_rate_exponent': 0},
+                       {'supersaw_detune_power': 0}, {'xmod_depth_max': 1.1},
+                       {'xmod_depth_power': 0}, {'lfo_rate_exponent': 0}, {'lfo_pitch_exponent': 0},
                        {'waveform_order': ['sine']}]:
             with self.assertRaises(ValueError):
                 Profile(**values)
@@ -205,7 +284,6 @@ class MappingTests(unittest.TestCase):
                 convert(source(), bpm=bpm)
 
     def test_assets_and_determinism(self):
-        import base64
         result = convert(source(SMIX=.5, NMIX=.25))
         settings = result.preset['settings']
         frame = settings['wavetables'][0]['groups'][0]['components'][0]['keyframes'][0]
@@ -280,6 +358,51 @@ class CliTests(unittest.TestCase):
         profile = self.root / 'bad.json'
         profile.write_text('{"typo": 1}')
         self.assertEqual(self.run_cli('convert', self.input, '-o', self.root / 'a.vitalbank', '--profile', profile), 2)
+
+    def test_inspect_shows_source_structure_midi_estimates_and_mapped_lfo_pitch(self):
+        single = self.root / 'lfo.p202'
+        single.write_bytes(encode([('LFO test', [('L2TY', 0), ('L2FQ', .5), ('L2>P', .8)])]))
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(main(['inspect', str(single)]), 0)
+        text = output.getvalue()
+        self.assertIn('P202 file:', text)
+        self.assertIn('Record: offset 20', text)
+        self.assertIn('[LFO 2]', text)
+        self.assertIn('L2FQ = 0.5 | normalized 0..1; MIDI≈63.500 (~64); free-rate≈10 Hz', text)
+        self.assertIn('L2>P = 0.800000012 | signed normalized -1..1; MIDI≈114.300 (~114); pitch≈', text)
+
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(main(['inspect', str(single), '--json']), 0)
+        payload = json.loads(output.getvalue())
+        self.assertEqual(payload['file_size'], len(single.read_bytes()))
+        lfo_pitch = next(item for item in payload['presets'][0]['decoded_parameters']
+                         if item['tag'] == 'L2>P')
+        self.assertAlmostEqual(lfo_pitch['midi_7bit_estimate'], 114.3, places=4)
+        self.assertAlmostEqual(lfo_pitch['decoded']['pitch_semitones'],
+                               lfo_pitch_semitones(.8, Profile()), places=5)
+
+    def test_default_output_paths(self):
+        # A multi-preset P202 defaults to a bank beside its input.
+        bank_output = self.root / 'test.vitalbank'
+        self.assertEqual(self.run_cli('convert', self.input), 0)
+        self.assertTrue(bank_output.is_file())
+        self.assertTrue(Path(str(bank_output) + '.report.json').is_file())
+
+        # Selecting one preset instead defaults to a sibling .vital file.
+        selected_output = self.root / 'test.vital'
+        self.assertEqual(self.run_cli('convert', self.input, '--preset', '1'), 0)
+        self.assertTrue(selected_output.is_file())
+        self.assertTrue(Path(str(selected_output) + '.report.json').is_file())
+
+        # Directory output is opt-in and uses the input stem as the directory.
+        directory_input = self.root / 'directory.p202'
+        directory_input.write_bytes(encode([('One', [('GAIN', 1)]), ('Two', [('GAIN', .5)])]))
+        directory_output = self.root / 'directory'
+        self.assertEqual(self.run_cli('convert', directory_input, '--format', 'directory'), 0)
+        self.assertEqual(len(list(directory_output.glob('*.vital'))), 2)
+        self.assertTrue((directory_output / 'conversion-report.json').is_file())
 
 
 if __name__ == '__main__':

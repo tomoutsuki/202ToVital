@@ -9,45 +9,35 @@ Do not label these mappings acoustically verified.
 ## Oscillators, envelopes and routing
 
 `O1TY`/`O2TY` are provisionally ordered saw, pulse, sine, triangle, supersaw.
-Wave Source assets are generated from analytic waveforms, with no external table
-files. Pulse width assumes normalized PW maps 50%..99% duty. A controlled
-Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model. For an isolated
-OSC1 Super Saw in parallel routing with `BLNC=-1`, no OSC interactions, and the
-default `supersaw_asymmetric_topology` profile setting, the converter reserves
-Vital OSC1 for the observed zero-cent cluster and repurposes the muted Poison OSC2
-as a five-voice auxiliary group through filter 1. At full DETUNE, the auxiliary
-group is centered at +33.6 cents with symmetric +/-69.2 and +/-144.5-cent pairs.
-Together with OSC1 this yields approximately -110.9, -35.6, 0, +33.6, +102.8,
-and +178.1 cents: within about 1.5 cents of the six resolved Poison clusters in
-the controlled recording, and without the prior extra low Vital voice. Center and
-per-side fitted MIX gains set the two oscillator levels; the auxiliary unison uses
-a fixed blend that equalizes its five voices. Center shift and pair spacing scale
-with the existing nonlinear DETUNE curve. This is a reconstruction of measured
-output positions, not evidence of Poison's internal oscillator architecture.
+Wave Source assets are generated from analytic waveforms except for Super Saw,
+which loads the packaged `data/JP_inspired_HP2_fc_1p5xF0_2048.wav` float32 table
+verbatim. Pulse width assumes normalized PW maps 50%..99% duty. A controlled
+Super Saw MIX/DETUNE sweep supports a JP-8000/Szabo-style model. The converter
+preserves a strict one-to-one oscillator mapping: Poison OSC1 maps only to Vital
+OSC1 and Poison OSC2 maps only to Vital OSC2. Each Super Saw uses seven voices in
+that oscillator slot, normal unison stack, zero stereo spread, 180-degree phase,
+full random phase, and the embedded 2048-sample `JP_inspired_HP2_fc_1p5xF0`
+single-cycle wavetable supplied for this conversion. No auxiliary Vital oscillator
+or harmonic layer is allocated to reproduce one Poison oscillator.
 
-Other Super Saw patches fall back to seven-voice symmetric Vital unison with a
-20-cent detune range, detune power 0.95, fitted Blend, and random oscillator
-phase. The fallback also applies when Poison OSC2 is audible, serial routing or
-OSC interaction is active, or the profile disables the reconstruction. The
-topology deliberately omits LFO2 and `MPI2` destinations in the reconstruction,
-because they targeted the muted Poison OSC2 branch and must not animate the new
-auxiliary voices. The controlled recordings still show an unresolved
-MIX-dependent harmonic difference, waveform/phase uncertainty, and level gap;
-this change corrects pitch-cluster placement only.
-
-The profile's `supersaw_octave_layer` is disabled by default. When explicitly
-enabled for an eligible reconstruction with no sub oscillator, it reserves Vital
-OSC3 for a phase-reset sine at OSC1 +12 semitones and routes it through ENV2 and
-filter 1. Its provisional center/side scales (0.45/1.66) and 3.89 target
-second-to-first center-harmonic ratio are derived from the full-MIX/full-DETUNE
-comparison, not reverse-engineered Poison internals. The layer is a diagnostic
-additive oscillator, not a custom Poison wavetable, and must be rendered and
-measured before it can become a default conversion behavior.
+MIX maps through the fitted JP center/per-side gain ratio into Vital Blend.
+DETUNE maps through the fitted nonlinear Poison curve. Because Vital's voice
+positions are symmetric, the target outer spread is the mean absolute distance
+of Szabo's measured -201.79/+176.69-cent pair rather than either side alone.
+Detune Power 1.09 is a one-parameter fit to the averaged inner, middle and outer
+JP pairs using Vital's exponential `powerScale()` law. The fit is intentionally
+approximate: at full DETUNE Vital produces symmetric pairs near +/-42.0,
++/-102.4 and +/-189.2 cents, versus averaged JP targets of +/-34.1, +/-108.4 and
++/-189.2 cents. It cannot preserve the individual asymmetric signs.
 
 Vital's serialized `unison_detune` uses quadratic scaling: physical outer spread
 is `detune_range * unison_detune**2`. The converter therefore writes
-`sqrt(outer_cents / detune_range)`, including for the auxiliary group. Fine tuning
-assumes +/-100 cents; tune range is configurable.
+`sqrt(outer_cents / detune_range)` rather than copying a displayed knob value.
+The controlled recordings still show unresolved waveform coloration,
+MIX-dependent harmonic balance, phase behavior and absolute-level differences.
+The current JP-inspired HP2 asset improves the waveform baseline but does not
+establish an exact reconstruction of Roland's pitch-dependent filtering or
+aliasing. Fine tuning assumes +/-100 cents; tune range is configurable.
 
 Balance is provisionally a linear crossfade in acoustic amplitude, converted
 through Vital's square-root level encoding. Amp ADSRs use ENV2/ENV3, filter ADSRs
@@ -87,24 +77,48 @@ The default calibration profile proposes envelope seconds = 10*x**3 and cutoff
 at unmeasured RATE zero; `lfo_max_hz` and `lfo_rate_exponent` retain the curve
 as profile settings rather than asserting it as identified Poison DSP. Fine
 tuning, filter/pitch modulation limits and EQ range are similarly configurable.
+LFO pitch uses the provisional signed curve
+`lfo_pitch_semitones * sign(x) * abs(x)**lfo_pitch_exponent`, with defaults of
+24 semitones and exponent 3.3. That curve fits the reported control geometry
+(roughly MIDI 114--117 for about +11.8 semitones), but has not been verified by
+audio measurement. P202 stores the signed normalized float `x`; the inspect
+command displays that raw value and only labels the corresponding MIDI number as
+an estimate.
 Vital modulation amount is divided by the destination's parameter span; bipolar
 amounts are doubled because Vital shifts the source by -0.5. See
 `modulation_connection_processor.cpp:94`.
 
 Tempo uses the draft's uncertain 22-entry division list and assumes a normalized
 selector index. It chooses the nearest Vital straight/dotted/triplet division,
-reporting approximations. LFO1 is provisionally routed to branch1 and LFO2 to
-branch2. Positive and negative source depth stays signed in a bipolar Vital
-connection. Normal LFOs reset at phase zero and random LFOs reset per note as a
+reporting approximations. Each Poison LFO pitch, filter and amplitude depth is
+routed to both oscillator/filter branches. Positive and negative source depth
+stays signed in a bipolar Vital connection. Poison's sine selector uses Vital's
+built-in three-point smooth `Sin` shape; it is not sampled into a custom point
+list. Normal LFOs reset at phase zero and random LFOs reset per note as a
 deliberate export policy, independent of Poison RETRIG; the matching Poison
 reset-phase offset remains unmeasured. Random uses Vital's sample-and-hold
 generator. Random fade and LFO XFM are not implemented.
 
 ## Modulation and effects
 
-XMOD assumes OSC1 carrier, OSC2 modulator and maps to Vital FM (phase mode 7).
-This is not proof of Poison's cross-modulation algorithm. Ring uses RM from OSC2
-(mode 10), taking priority if both are active; lost XMOD is reported. Poison
+XMOD is a dedicated conversion stage that assumes OSC1 carrier and OSC2
+modulator and maps to Vital `FM <- OSC2` (phase mode 7). The profile maps the
+normalized Poison control to effective FM depth as
+`xmod_depth_max * XMOD ** xmod_depth_power`; the serialized Vital knob is the
+square root of that result because Vital squares FM controls internally. The
+default maximum/power of 1/1 preserve a linear effective-depth hypothesis, not
+a measured calibration. The conversion report records the source depth,
+effective depth, serialized amount, topology and confidence separately.
+
+Velocity and wheel modulation use the same curve to match the full-source
+endpoint: each Vital modulation amount is the difference between the base knob
+and the knob at `min(1, XMOD + source_depth)`. Intermediate response and combined
+velocity+wheel behavior remain approximate because Vital adds modulation after
+the nonlinear Poison curve hypothesized here. Super Saw XMOD is explicitly
+reported as experimental because Poison's internal per-voice routing is unknown.
+This is not proof of Poison's cross-modulation algorithm or even its direction.
+Ring uses RM from OSC2 (mode 10), taking priority if both are active; all static
+and dynamic XMOD routes are then omitted and reported. Poison
 oscillator-to-oscillator hard sync is omitted: Vital self-sync does not implement
 the same dependency. Dynamic PWM is omitted because its routing is unverified.
 See `synth_oscillator.h:116` and `producers_module.h:43` for Vital mode and source
